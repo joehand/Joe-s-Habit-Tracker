@@ -59,9 +59,9 @@ Date.prototype.formatTime = function () {
 	if(this.getHours()>12){
 		hh = this.getHours()-12;
 		tt = "PM";
-	} else if (this.getHours()===12) {
-		hh = this.getHours();
-		tt = "PM";
+	} else if (this.getHours()===12 || this.getHours() ==0) {
+		hh = 12;
+		this.getHours() === 12 ? tt = "PM" : tt = "AM";
 	}		
 	return hh + ":" + nn.substr(-2) + " " + tt;
 };

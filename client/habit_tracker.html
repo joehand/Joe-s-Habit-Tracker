@@ -13,9 +13,8 @@
 	      <!--Body content-->
 			
 			{{> calendar}}
+			{{> tag_filter}}
 			
-			
-			    	{{> tag_filter}}
 	    </div>
 		<div class="span4" id="sidebar">
 		  <section class="sidebar">	
@@ -117,34 +116,39 @@
 	</div>
   </div>
   </div>	
+  <div class="item-tags">
+    {{#each tag_objs}}
+      <div class="tag removable_tag">
+        <div class="name">{{tag}}</div>
+        <div class="remove"></div>
+      </div>
+    {{/each}}
+    {{#if adding_tag}}
+      <div class="tag edittag">
+        <input type="text" id="edittag-input" value="" />
+      </div>
+    {{else}}
+      <div class="tag addtag">
+        +tag
+      </div>
+    {{/if}}
+  </div>
 {{/if}}
-    <div class="item-tags">
-      {{#each tag_objs}}
-        <div class="tag removable_tag">
-          <div class="name">{{tag}}</div>
-          <div class="remove"></div>
-        </div>
-      {{/each}}
-      {{#if adding_tag}}
-        <div class="tag edittag">
-          <input type="text" id="edittag-input" value="" />
-        </div>
-      {{else}}
-        <div class="tag addtag">
-          +tag
-        </div>
-      {{/if}}
-    </div>
   </li>
 </template>
 
 
 <template name="tag_filter">
-  <div id="tag-filter" class="tag-user">
-    <div class="label">Show:</div>
+  <div id="tag-filter" class="well tag-user span11">
     {{#each tags}}
-      <div class="tag {{selected}}">
-        {{tag_text}} <span class="count">({{count}})</span>
+      <div class="pull-left tag {{selected}}">
+		{{#if selected}}
+	
+        	{{tag_text}} <span class="badge">{{count}}</span>
+		{{else}}
+	
+        	{{tag_text}} <span class="badge  badge-inverse">{{count}}</span>
+		{{/if}}
       </div>
     {{/each}}
   </div>
@@ -153,32 +157,29 @@
 
 <template name="calendar">
 		<div class="span12" id="calendar" data-ts="{{ts}}">
-			
 			<ul class="pager">
-			  <li class="previous">
-			    <a href="#">&larr; Older</a>
+			  <li class="previous span3">
+			    <a href="#">&larr; {{month.prev}}</a>
 			  </li>
-			  <li class="next">
-			    <a href="#">Newer &rarr;</a>
+					<h2 class="time span6 muted">{{time}}</h2>
+			  <li class="next span3">
+			    <a href="#">{{month.next}} &rarr;</a>
 			  </li>
 			</ul>
 			
 
 			<div class="row-fluid">
-			<h1 class="year span12">{{year}}</h1>
+				<h3 class="month pull-left">{{month.current}}</h3>
+				<h1 class="year  ">{{year}}</h1>
 			</div>
-			
-			
-			<div class="row-fluid">
-				<h3 class="month span9">{{month}}</h3>
-				<h2 class="time span3">{{time}}</h2>
-			</div>
+
+
 			
 			<table id="calendar" class="table calendar">
 				<thead>
 					<tr>
 					{{#each days}}
-						<th>{{this}}</th>
+						<th class="caps">{{this}}</th>
 					{{/each}}
 					</tr>
 				</thead>
@@ -186,8 +187,8 @@
 					{{#each weeks}}
 					<tr>
 						{{#each dates}}
-							<td class="{{this.class}}" id="{{this.id}}" data-ts="{{this.dayts}}">
-							{{this.date}}</td>
+							<td class="{{this.class}}" id="{{this.id}}" data-ts="{{this.dayts}}">{{this.date}}<div id="checkMark"></div>
+							</td>
 						{{/each}}
 					</tr>
 					{{/each}}					

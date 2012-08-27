@@ -16,7 +16,8 @@ if (Meteor.is_client) {
 	   Session.set('calendar', cal);
 	   Session.set('year', cal.year());
 	   Session.set('month', cal.month());
-	   Session.set('time', cal.now);
+	   Session.set('time', cal.now.formatTime());
+	   timeInterval();
 	 });
 
   Template.calendar.ts = function() {
@@ -27,17 +28,27 @@ if (Meteor.is_client) {
 	  return Session.get('year') || new Calendar().year();
   };
 
-  Template.calendar.month = function() {
-	  return Session.get('month') || new Calendar().month();
+  Template.calendar.month = function() {	  
+	  var cal = Session.get('calendar') || new Calendar();
+	   var next = cal.nextMonthName(cal).nextMonth;
+	   var prev = cal.previousMonth().prevMonth;
+	   var month = {
+				current: cal.month(),
+				prev: prev,
+				next: next
+	  		}
+	   return month;
   };
-
 
   Template.calendar.weeks = function() {
 	  return Session.get('weeks') || new Calendar().weeks();
   };
 
+  Template.calendar.days = function() {
+  	  return new Calendar().days;
+   };
+
   Template.calendar.time = function() {
-	 timeInterval();
 	 return Session.get('time') || new Date().formatTime();
   };
 
@@ -45,19 +56,20 @@ if (Meteor.is_client) {
   	'click .next': function (evt) {
 	    var cal = null;
 	    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
-		cal = cal.nextMonth();
+		cal = cal.nextMonthName(cal);
+			cal.updateCalendar();
 
 	  },
   	'click .previous': function (evt) {
 	    var cal = null;
 	    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
-		cal = cal.previousMonth();	
+		cal = cal.previousMonth(true);	
 
 	  }	,
 	 'click .time': function (evt) {
 	    var cal = null;
 	    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
-		cal = cal.currentMonth();
+		cal = cal.currentMonth(true);
 	  }
 
   };
@@ -69,8 +81,10 @@ var timeInterval = function() {
 	var timer = function(){
 		timeInterval();
 	}
-	setTimeout(timer,60000);			
-	Session.set('time', new Date().formatTime());
+	time = new Date().formatTime();
+	$('.time').html(time);
+	
+	setTimeout(timer,10000);
 }
 
 var Calendar = function(calDate) {
@@ -149,7 +163,7 @@ Calendar.prototype =  {
 		
 		return dates;
 	},
-	previousMonth: function() {
+	previousMonth: function(update) {
 		var oldCal = this, newMonth, newYear, cal, oldMonth = oldCal.calDate.getMonth();
 		
 		if (oldMonth ===0) {
@@ -160,11 +174,15 @@ Calendar.prototype =  {
 			newYear = oldCal.year();
 		}
 		
-		cal = new Calendar (new Date(newYear, newMonth, 1));
-		cal.updateCalendar();
+		var newDate = new Date(newYear, newMonth, 1)
+		cal = new Calendar (newDate);
+
+		cal.prevMonth = newDate.monthName();
+			if (update)
+				cal.updateCalendar();
 		return cal;
 	},
-	nextMonth: function() {
+	nextMonth: function(update) {		
 		var oldCal = this, newMonth, newYear, cal, oldMonth = oldCal.calDate.getMonth();
 		
 		if (oldMonth ===11) {
@@ -174,13 +192,36 @@ Calendar.prototype =  {
 			newMonth = oldMonth + 1;
 			newYear = oldCal.year();
 		}
-		cal = new Calendar (new Date(newYear, newMonth, 1));
-		cal.updateCalendar();
+		
+		var newDate = new Date(newYear, newMonth, 1)
+		cal = new Calendar (newDate);
+		
+		cal.nextMonth = newDate.monthName();
+		if (update)
+			cal.updateCalendar();
 		return cal;
 	},
-	currentMonth: function() {
+	nextMonthName: function(oldCal) {
+		var newMonth, newYear, cal, oldMonth = oldCal.calDate.getMonth();
+		
+		if (oldMonth ===11) {
+			newMonth = 0;
+			newYear = oldCal.year() + 1;
+		} else {
+			newMonth = oldMonth + 1;
+			newYear = oldCal.year();
+		}
+		
+		var newDate = new Date(newYear, newMonth, 1)
+		cal = new Calendar (newDate);
+		
+		cal.nextMonth = newDate.monthName();
+		return cal;
+	},
+	currentMonth: function(update) {
 		var cal = new Calendar();
-		cal.updateCalendar();	
+		if (update)
+			cal.updateCalendar();
 		return cal;
 	},
 	updateCalendar: function() {
@@ -197,7 +238,9 @@ Calendar.prototype =  {
 		//dates = [timestamp1, timestamp2, ..], add = true (add dates) or false (remove dates)
 		var html = '<i data-id="' + habit_id + '" class="icon-ok"></i>';
 		
-		$('#calendar').find('*[data-id="' + habit_id + '"]').remove();
+		var $checkMarks = $('#calendar').find('*[data-id="' + habit_id + '"]');
+		$checkMarks.parent().removeClass('completed');
+		$checkMarks.remove();
 		
 		_.each(dates, function(date) {
 			  var ts = new Date(date).removeHours().getTime();

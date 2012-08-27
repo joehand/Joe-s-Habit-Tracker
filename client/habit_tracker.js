@@ -45,7 +45,7 @@ Meteor.autosubscribe(function () {
 // Returns an event_map key for attaching "ok/cancel" events to
 // a text input (given by selector)
 var okcancel_events = function (selector) {
-  return 'keyup '+selector+', keydown '+selector;
+  return 'keyup '+selector+', keydown '+selector+', focusout '+selector;
 };
 
 // Creates an event handler for interpreting "escape", "return", and "blur"
@@ -79,7 +79,6 @@ var focus_field_by_id = function (id) {
     input.select();
   }
 };
-
 ////////// Users //////////
 
 Template.users.users = function () {
@@ -153,7 +152,8 @@ Template.habits.events[ okcancel_events('#new-habit') ] =
         created: (new Date().getTime()),
         timestamp: null,
         tags: tag ? [tag] : [],
-        history: []
+        history: [],
+		streak: 0
       });
       evt.target.value = '';
     }
@@ -192,6 +192,7 @@ Template.habits.habits = function () {
 
   return Habits.find(sel, {sort: {done:1, text:1}});
 };
+
 
 Template.habit_item.tag_objs = function () {
   var habit_id = this._id;
@@ -309,7 +310,7 @@ Template.habit_item.events[ okcancel_events('#date-input') ] =
       Session.set('editing_date', null);
     },
     cancel: function () {
-      Session.set('editing_addtag', null);
+      Session.set('editing_date', null);
     }
   });
 
@@ -338,7 +339,7 @@ Template.tag_filter.tags = function () {
 };
 
 Template.tag_filter.tag_text = function () {
-  return this.tag || "All items";
+  return this.tag || "All";
 };
 
 Template.tag_filter.selected = function () {

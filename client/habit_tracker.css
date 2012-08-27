@@ -1,32 +1,19 @@
-/* CSS declarations go here */
+@import url(http://fonts.googleapis.com/css?family=Playball);
+
+
+/* Body and structure
+-------------------------------------------------- */
+
 html {
 	overflow-y: scroll;
 }
 
-#form {
-	padding-left:5px;
+body {
+  background-color: #F3F3F3;
+  position: relative;
+  font-family: 'PT Sans',Helvetica,sans-serif;
 }
 
-.sidebar {
-	padding-top:20px;
-	position:fixed;
-}
-
-.content {
-	border-right: 1px solid #E2E2E2;
-	border-bottom: 1px solid #E2E2E2;
-	padding:30px 15px;
-	color:#444;
-	font-size:11px;
-	line-height:0px;
-}
-
-.habits {
-	margin-top:50px;
-}
-
-.page-wrap {
-}
 
 input.required {
 	border-color:red;
@@ -43,14 +30,27 @@ input:required:valid, textarea:required:valid { /* when a field is considered va
     border-color: #28921f;
 }
 
+.caps {
+	text-transform:uppercase;
+}
 
+.sidebar {
+	padding:20px;
+    background-color: #fff;
+	position:fixed;
+	height:100%;
+	border-left: 1px solid #E2E2E2;
+}
 
+.page-wrap {
+}
 
-/* Body and structure
--------------------------------------------------- */
-body {
-  background-color: #fff;
-  position: relative;
+.content {
+	border-bottom: 1px solid #E2E2E2;
+	padding:30px 15px;
+	color:#444;
+	font-size:11px;
+	line-height:0px;
 }
 
 
@@ -58,49 +58,53 @@ body {
 
 /* calendar
 -------------------------------------------------- */
-.year{
-	font-size:108px;
-	margin:30px;
+
+
+#calendar {
 }
+.year{
+	font-size:42px;
+	line-height:132px;
+	vertical-align:bottom;
+	text-shadow: 0px 1px 1px #000;
+	font-family: 'Playball', cursive;
+	
+	}	
 
 .month{
-	font-size:42px;
-	color:#FF0000;
+font-size:108px;	font-family: 'Playball', cursive;
+
+margin:30px 20px 30px 0;
+text-shadow: 0px 1px 1px #000;
+
 }
 
 .time{
 	font-size:36px;
-	text-align:right;
+	text-align:center;
 }
 
-.calendar {
-	border-bottom:1px solid #E2E2E2;
-}
 
-.calendar TH{
-	font-size:14px;
-	font-weight:bold;
-	border-top:1px solid #E2E2E2;
+.calendar TR:hover TD{
+	background-color:#fff;
+	color:#333;
 }
 
 .calendar TD{
-	height:50px;
+	position:relative;
+	height:75px;
 	font-size:24px;
-	color:#999;
 }
 
 .calendar TD.weekend{
-	color:#CDCDCD;
+	color:#999;
 }
 
 .calendar TD.today{
-	background-color:#EFEFEF;
-	color:#666666;
+	color:#009999;
+	border:1px solid #009999;
 }
 
-.calendar TD.habit{
-	color:red;
-}
 
 .calendar TD i{
 	display:none;
@@ -110,8 +114,66 @@ body {
 }
 
 
+/* webkit specific stuff for calendar nice =) */
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+/* CSS Statements that only apply on webkit-based browsers (Chrome, Safari, etc.) */
+	
+
+	.time{
+		font-size:36px;
+		text-align:center;
+		font-family: Lucida Grande;
+	        background-color: #666666;
+	        -webkit-background-clip: text;
+		-moz-background-clip: text;
+		background-clip: text;
+	        color: transparent;
+	        text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;
+	}
+
+
+	.calendar TD{
+		font-family: Lucida Grande;
+	        background-color: #333;
+	        -webkit-background-clip: text;
+		-moz-background-clip: text;
+		background-clip: text;
+	        color: transparent;
+	        text-shadow: rgba(255,255,255,0.5) 0px 3px 3px;
+
+	} 
+	
+	.calendar TD.weekend {
+        color: transparent;
+		background-color:#999;
+	}
+	
+	.calendar TD.today {
+	    color: transparent;
+		background-color:#009999;
+	}
+}
+
+
+.calendar TD.completed #checkMark{
+    color: #666;
+	background:url('/Red_x.png') center center no-repeat;
+	background-size: 65px 65px;
+	position:absolute;
+	width:100%;
+	height:100%;
+	top:0;
+	left:0;
+	z-index:-1;
+}
+
 /* habit lists
 -------------------------------------------------- */
+
+.habits {
+	margin-top:50px;
+}
 
 #new-habit-box {
     font-size: 160%;
@@ -223,49 +285,45 @@ body {
     width: 80px;
 }
 
-
-
-
-.tag {
-    cursor: pointer;
-    float: left;
-    margin: 5px;
-    padding: 2px 7px;
-    font-size: 80%;
-    font-weight: bold;
-    background: #999;
-    color: #fff;
-    border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    -o-border-radius: 4px;
-
-    opacity: 1;
-    transition: opacity 0.3s linear;
-    -moz-transition: opacity 0.3s linear;
-    -webkit-transition: opacity 0.3s linear;
-    -o-transition: opacity 0.3s linear;
-
-    position: relative;
-}
-
-#tag-filter .label {
-    float: left;
-    margin-top: 9px;
-    margin-left: 12px;
-    margin-right: 8px;
-}
-
 #tag-filter .tag {
-    margin-top: 10px;
-    border: 1px solid #777;
+	font-size:15px;
+	line-height:15px;
+	cursor:pointer;
+	text-transform:capitalize;
+	font-variant:small-caps;
+	background-color: #CCC;
+	border: 1px solid #2C0311;
+	padding: 4px 7px 4px 7px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	margin: 5px;
+	-moz-background-clip: padding;
+	-webkit-background-clip: padding-box;
+	background-clip: padding-box;
+	text-shadow: 0 -1px 0 rgba(255, 255, 255, .4);
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4),0 1px 1px rgba(0, 0, 0, .2);
+	-moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.4),0 1px 1px rgba(0,0,0,.2);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4),0 1px 1px rgba(0, 0, 0, .2);
+	-webkit-transition: all .3s ease-out;
+	-moz-transition: all .3s ease-out;
+	transition: all .3s ease-out;
 }
+
+	#tag-filter  .badge {
+		position:relative;
+		top:-1px;
+		padding-top:2px;
+	}
+
 
 #tag-filter .selected {
-    background: #69d;
+	background-color: #006363;
+	color:#fff;
 }
 
-#tag-filter .count {
-    font-weight: normal;
-    padding-left: 2px;
+#tag-filter .selected .badge {
+	color:#333;
 }
+
+
