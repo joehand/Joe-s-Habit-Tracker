@@ -1,0 +1,257 @@
+<head>
+  <title>Chat</title>
+</head>
+
+<body>
+	
+	<div class="container-fluid">
+	  	
+ 
+		
+	  <div class="row-fluid page-wrap">
+	    <div class="span8 content">
+	      <!--Body content-->
+			
+			{{> calendar}}
+			
+			
+			    	{{> tag_filter}}
+	    </div>
+		<div class="span4" id="sidebar">
+		  <section class="sidebar">	
+			<!--Sidebar content-->
+			 <div class="row-fluid">
+					<!--
+			  		<div id="createUser" class="span2 offset10">
+			    		<input type="text" id="new-user" class="input-mini" placeholder="New user" />
+			  		</div>-->
+					{{> users}}
+		  		<p class="lead span9">Track your daily habits visually. Try not to break the chain.</p>
+		
+		    	{{> habits}}
+			</div>
+		  </section>
+	    </div>
+	  </div>
+	</div>
+	
+</body>
+
+
+<template name="users">
+	<ul class="nav nav-pills">
+    	{{#each users}}		
+			{{#if selected}}
+  				<h2>{{name}}'s Habit Tracker</h2>
+				<!--
+		           <li class="dropdown {{selected}}">
+      				<a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">{{name}}'s Habit Tracker <i class="icon-user"></i></a>
+	          			
+		      
+	                <ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
+				
+    					{{#each users}}
+  			<li class="user {{#if selected}}active{{/if}}">
+	        		{{#if editing}}
+	          			<div class="edit">
+	            			<input class="user-name-input" id="user-name-input" type="text" value="{{name}}" />
+	          			</div>
+	        		{{else}}
+	            		<a tabindex="-1" class="user-name {{name_class}}" href="/{{_id}}">
+              					{{name}}
+						</a>
+	        		{{/if}}
+      	</li>
+    {{/each}}	
+            </ul>
+          </li>		-->
+	{{/if}}	
+{{/each}}
+      </ul>
+  </div>	
+</template>
+
+
+<template name="habits">
+  {{#if any_user_selected}}
+  <div id="items-view" class="span10">
+	  <div class="control-group span10" id="new-habit-box">
+		<div class="controls ">
+	      <div class="input-prepend">
+	        <span class="add-on"><label for="new-habit"><i class="icon-leaf"></i></label></span>
+		    <input class="" id="new-habit" type="text" placeholder="New Habit" required/>
+		  </div>
+	    </div>
+	  </div>
+    <ul id="item-list" class="span10">
+      {{#each habits}}
+        {{> habit_item}}
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
+</template>
+
+<template name="habit_item">
+  <li class="habit {{done_class}}">
+    {{#if editing}}
+      <div class="edit">
+        <input id="habit-input" type="text" value="{{text}}" />
+		
+    {{else}}
+      <div class="destroy"></div>
+      <div class="display">
+        <input class="check" name="markdone" type="checkbox" {{{done_checkbox}}} />
+        <div class="habit-text">{{text}}</div>
+      </div>
+    {{/if}}	
+
+	
+      {{#if adding_date}}
+  <div class="control-group">
+    <div class="controls">	
+	  <div class="input-prepend editdate">
+        <span class="add-on"><label for="date"><i class="icon-calendar"></i></label></span>
+		<input class="input-large" type="date" id="date-input" value=""/>
+	  </div>
+	</div>
+  </div>
+  </div>	
+{{/if}}
+    <div class="item-tags">
+      {{#each tag_objs}}
+        <div class="tag removable_tag">
+          <div class="name">{{tag}}</div>
+          <div class="remove"></div>
+        </div>
+      {{/each}}
+      {{#if adding_tag}}
+        <div class="tag edittag">
+          <input type="text" id="edittag-input" value="" />
+        </div>
+      {{else}}
+        <div class="tag addtag">
+          +tag
+        </div>
+      {{/if}}
+    </div>
+  </li>
+</template>
+
+
+<template name="tag_filter">
+  <div id="tag-filter" class="tag-user">
+    <div class="label">Show:</div>
+    {{#each tags}}
+      <div class="tag {{selected}}">
+        {{tag_text}} <span class="count">({{count}})</span>
+      </div>
+    {{/each}}
+  </div>
+</template>
+
+
+<template name="calendar">
+		<div class="span12" id="calendar" data-ts="{{ts}}">
+			
+			<ul class="pager">
+			  <li class="previous">
+			    <a href="#">&larr; Older</a>
+			  </li>
+			  <li class="next">
+			    <a href="#">Newer &rarr;</a>
+			  </li>
+			</ul>
+			
+
+			<div class="row-fluid">
+			<h1 class="year span12">{{year}}</h1>
+			</div>
+			
+			
+			<div class="row-fluid">
+				<h3 class="month span9">{{month}}</h3>
+				<h2 class="time span3">{{time}}</h2>
+			</div>
+			
+			<table id="calendar" class="table calendar">
+				<thead>
+					<tr>
+					{{#each days}}
+						<th>{{this}}</th>
+					{{/each}}
+					</tr>
+				</thead>
+				<tbody>
+					{{#each weeks}}
+					<tr>
+						{{#each dates}}
+							<td class="{{this.class}}" id="{{this.id}}" data-ts="{{this.dayts}}">
+							{{this.date}}</td>
+						{{/each}}
+					</tr>
+					{{/each}}					
+				</tbody>
+			</table>
+			
+		</div>	
+			
+</template>
+
+<!--
+
+<template name="entry">
+	  <div class="control-group">
+		<div class="controls">
+	      <div class="input-prepend">
+	        <span class="add-on"><label for="name"><i class="icon-leaf"></i></label></span>
+		    <input class="input-xlarge" id="name" type="text" placeholder="Your Habit" required/>
+		  </div>
+	    </div>
+	  </div>
+	
+	
+	  <div class="control-group">
+	  	
+		<div class="controls">
+	      <div class="input-prepend">
+	        <span class="add-on"><label for="notes"><i class="icon-book"></i></label></span>
+		    <textarea class="input-xlarge" id="notes" placeholder="Notes" name="notes" rows="3"></textarea>
+		  </div>
+	    </div>
+	  </div>
+	  	
+	  <div class="control-group">
+	    <div class="controls">	
+		  <div class="input-prepend">
+	        <span class="add-on"><label for="date"><i class="icon-calendar"></i></label></span>
+			<input class="input-large" type="date" id="date" value="{{today}}"/>
+			  <button class="btn btn-mini btn-success status" value="true" type="button" id="status" name="status">Habit Done!</button>
+		  </div>
+		</div>
+	  </div>
+	
+</template>
+
+<template name="habits">
+	<div class="habits span12">
+	{{#each habits}}
+		{{> habit}}
+	{{/each}}	
+	</div>
+</template>	
+<template name="habit">
+	<div class="row-fluid">
+		<div class="span4"><strong>{{ name }}:</strong></div>
+		<div class="span4">{{notes}}</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span3">
+			{{#if status}}<i class="icon-ok"></i>
+			{{else}}<i class="icon-remove"></i>
+			{{/if}}
+			<small>{{ date }}</small>
+		</div>
+	</div>
+</template>-->
+

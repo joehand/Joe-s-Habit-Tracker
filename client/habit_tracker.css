@@ -1,0 +1,271 @@
+/* CSS declarations go here */
+html {
+	overflow-y: scroll;
+}
+
+#form {
+	padding-left:5px;
+}
+
+.sidebar {
+	padding-top:20px;
+	position:fixed;
+}
+
+.content {
+	border-right: 1px solid #E2E2E2;
+	border-bottom: 1px solid #E2E2E2;
+	padding:30px 15px;
+	color:#444;
+	font-size:11px;
+	line-height:0px;
+}
+
+.habits {
+	margin-top:50px;
+}
+
+.page-wrap {
+}
+
+input.required {
+	border-color:red;
+}
+
+input:focus:required:invalid {
+    background: #fff url(images/invalid.png) no-repeat 98% center;
+    box-shadow: 0 0 5px #d45252;
+    border-color: #b03535
+}
+input:required:valid, textarea:required:valid { /* when a field is considered valid by the browser */
+    background: #fff url(images/valid.png) no-repeat 98% center;
+    box-shadow: 0 0 5px #5cd053;
+    border-color: #28921f;
+}
+
+
+
+
+/* Body and structure
+-------------------------------------------------- */
+body {
+  background-color: #fff;
+  position: relative;
+}
+
+
+
+
+/* calendar
+-------------------------------------------------- */
+.year{
+	font-size:108px;
+	margin:30px;
+}
+
+.month{
+	font-size:42px;
+	color:#FF0000;
+}
+
+.time{
+	font-size:36px;
+	text-align:right;
+}
+
+.calendar {
+	border-bottom:1px solid #E2E2E2;
+}
+
+.calendar TH{
+	font-size:14px;
+	font-weight:bold;
+	border-top:1px solid #E2E2E2;
+}
+
+.calendar TD{
+	height:50px;
+	font-size:24px;
+	color:#999;
+}
+
+.calendar TD.weekend{
+	color:#CDCDCD;
+}
+
+.calendar TD.today{
+	background-color:#EFEFEF;
+	color:#666666;
+}
+
+.calendar TD.habit{
+	color:red;
+}
+
+.calendar TD i{
+	display:none;
+}
+.calendar TD.completed i {
+	display:block;
+}
+
+
+/* habit lists
+-------------------------------------------------- */
+
+#new-habit-box {
+    font-size: 160%;
+    position: relative;
+}
+
+#new-habit {
+   position: absolute;
+   width: 100%;
+}
+
+#item-list {
+	border-top: 1px solid #ccc;
+	width:100%;
+    margin-left: 0px;
+}
+
+#item-list .habit {
+    overflow: hidden;
+    position: relative;
+}
+
+#item-list .habit .destroy {
+    cursor: pointer;
+    position: absolute;
+    left: 5px;
+    top: 25px;
+    height: 20px;
+    width: 20px;
+}
+
+#item-list .habit .display, #item-list .habit .edit {
+    margin-left: 30px;
+    height: 100%;
+    width: 100%;
+    float: left;
+    padding-top: 10px;
+    line-height: 1;
+}
+
+#habit-input {
+    top: -3px;
+	position:relative;
+	width:200px;
+}
+
+#item-list .done .habit-text {
+    text-decoration: line-through;
+    color: #999;
+}
+
+#item-list .habit:hover .destroy {
+    background: url('/destroy.png') no-repeat 0 0;
+}
+
+#item-list .habit .destroy:hover {
+    background-position: 0 -20px;
+}
+
+#item-list .habit .item-tags {
+    overflow: auto;
+    float: right;
+    margin-right: 8px;
+}
+
+#item-list .habit .item-tags .tag {
+    margin-top: 15px;
+}
+
+#item-list .habit .item-tags .removable_tag {
+    padding-right: 22px;
+}
+
+#item-list .habit .item-tags .tag .remove {
+    position: absolute;
+    top: 0;
+    right: 4px;
+    bottom: 0;
+    width: 16px;
+    background: url("/close_16.png") no-repeat 0 center;
+}
+
+#item-list .habit .item-tags .tag .remove:hover {
+    background-position: -16px center;
+}
+
+#item-list .habit .item-tags div.addtag {
+    background: none;
+    color: #333;
+    border: 1px dashed #999;
+}
+
+#item-list .habit .check {
+    float: left;
+    width: 25px;
+}
+
+#item-list .habit .habit-text {
+    float: left;
+    margin-left: 10px;
+    font-size: 100%;
+}
+
+#item-list .habit .edit input {
+    margin-left: 35px;
+}
+
+#edittag-input {
+    width: 80px;
+}
+
+
+
+
+.tag {
+    cursor: pointer;
+    float: left;
+    margin: 5px;
+    padding: 2px 7px;
+    font-size: 80%;
+    font-weight: bold;
+    background: #999;
+    color: #fff;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -o-border-radius: 4px;
+
+    opacity: 1;
+    transition: opacity 0.3s linear;
+    -moz-transition: opacity 0.3s linear;
+    -webkit-transition: opacity 0.3s linear;
+    -o-transition: opacity 0.3s linear;
+
+    position: relative;
+}
+
+#tag-filter .label {
+    float: left;
+    margin-top: 9px;
+    margin-left: 12px;
+    margin-right: 8px;
+}
+
+#tag-filter .tag {
+    margin-top: 10px;
+    border: 1px solid #777;
+}
+
+#tag-filter .selected {
+    background: #69d;
+}
+
+#tag-filter .count {
+    font-weight: normal;
+    padding-left: 2px;
+}
