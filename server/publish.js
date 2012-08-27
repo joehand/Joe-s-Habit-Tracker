@@ -1,21 +1,26 @@
-// Users -- {name: String}
-Users = new Meteor.Collection("users");
+// Lists -- {name: String}
+Lists = new Meteor.Collection("lists");
 
-// Publish complete set of users to all clients.
-Meteor.publish('users', function () {
-  return Users.find();
+// Publish complete set of lists to all clients.
+Meteor.publish('lists', function () {
+  return Lists.find();
 });
 
 
 // Habits -- {text: String,
 //           done: Boolean,
 //           tags: [String, ...],
-//           user_id: String,	
+//           list_id: String,	
 //           timestamp: Number,
 //           history: [timestamp:Number,...}
 Habits = new Meteor.Collection("habits");
 
-// Publish all items for requested user_id.
-Meteor.publish('habits', function (user_id) {
-  return Habits.find({user_id: user_id});
+// Publish all items for requested list_id.
+Meteor.publish('habits', function (list_id) {
+	return Habits.find({
+		list_id: list_id,
+		privateTo: {
+			$in: [null, this.userId()]
+		}
+	});
 });

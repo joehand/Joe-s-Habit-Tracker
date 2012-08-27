@@ -27,7 +27,7 @@ if (Meteor.is_client) {
 		return Session.get('year') || new Calendar().year();
 	};
 	
-	Template.calendar.month = function() {	  
+	Template.calendar.month = function() {
 		var cal = Session.get('calendar') || new Calendar(),
 			next = cal.nextMonthName(cal).nextMonth,
 			prev = cal.previousMonth().prevMonth;
@@ -36,50 +36,51 @@ if (Meteor.is_client) {
 						current: cal.month(),
 						prev: prev,
 						next: next
-		}
+		};
 		return month;
 	};
 	
 	Template.calendar.weeks = function() {
-	    return Session.get('weeks') || new Calendar().weeks();
+		return Session.get('weeks') || new Calendar().weeks();
 	};
 	
 	Template.calendar.days = function() {
-		  return new Calendar().days;
-	 };
+		return new Calendar().days;
+	};
 	
 	Template.calendar.time = function() {
-	   return Session.get('time') || new Date().formatTime();
+		return Session.get('time') || new Date().formatTime();
 	};
 	
 	Template.calendar.events = {
 		'click .next': function (evt) {
-	      var cal = null;
-	    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
-		cal = cal.nextMonthName(cal);
+			var cal = null;
+			cal = Session.get('calendar') ? new Calendar() : Session.get('calendar');
+			cal = cal.nextMonthName(cal);
 			cal.updateCalendar();
-
-	  },
-  	'click .previous': function (evt) {
-	    var cal = null;
-	    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
-		cal = cal.previousMonth(true);	
-
-	  }	,
-	 'click .time': function (evt) {
-	    var cal = null;
-	    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
-		cal = cal.currentMonth(true);
-	  }
-
-  };
+		},
+		'click .previous': function (evt) {
+			var cal = null;
+			cal = Session.get('calendar') ? new Calendar() : Session.get('calendar');
+			cal = cal.previousMonth(true);	
+		},
+		'click .time': function (evt) {
+			var cal = null;
+			cal = Session.get('calendar') ? new Calendar() : Session.get('calendar');
+			cal = cal.currentMonth(true);
+		}
+	};
 }
 
 
 
 var Calendar = function(calDate) {
 	this.now = new Date();
-	if (calDate && checkCurrent(this.now, calDate)) {
+	var check = false;
+	
+	if (calDate)
+		check = checkCurrent(this.now, calDate);
+	if (calDate && check) {
 		this.calDate = calDate;
 		this.current = false;
 	} else {
@@ -90,8 +91,15 @@ var Calendar = function(calDate) {
 	this.el = $('.content').find('*[data-ts="' + this.calDate.getTime() + '"]');	
 	
 	function checkCurrent(now, checkDate) {
-	  now.getMonth() + '' + now.getYear() === checkDate.getMonth() + '' + checkDate.getYear() ? check = false: check = true;
-	  return check;
+		var month = now.getMonth(),
+			year = now.getYear(),
+			prevMonth = checkDate.getMonth(),
+			prevYear = checkDate.getYear();
+		
+		if (month + '' + year === prevMonth + '' + prevYear)
+			return true;
+		else
+			return false;
 	}
 	
 	return this;
@@ -108,15 +116,15 @@ Calendar.prototype =  {
 			cal = this, date = 0;
 			
 		for (var i=0; i < cal.numWeeks(); ++i) {	
-			var dateArray = []	
+			var dateArray = [];
 			_.each(cal.days, function(day) {
 				dateArray.push('');
 			});
 			weekArray.push({index:i, dates: dateArray});
-		};
+		}
 		
 		_.each(weekArray, function(week, i) {
-			if (i != 0) 
+			if (i !== 0)
 				date = weekArray[i-1].dates[6].date;
 			weekArray[i].dates = cal.dates(date, week, i);
 		});
@@ -125,27 +133,26 @@ Calendar.prototype =  {
 	},
 	dates: function(date, week, i) {
 		var dates = week.dates,
-			cal = this,
 			calDate = this.calDate,
 			current = this.current,
 			now = this.now;	
 		_.each(dates, function(day, j) {
 			if ((i === 0 && j < calDate.firstOfMonth()) || date >= calDate.daysInMonth()) {
-				dates[j] = {date:'', class:'', id:'', ts: ''};
-			} else{
+				dates[j] = {date:'', elClass:'', id:'', ts: ''};
+			} else {
 				date += 1;
 				dates[j] = {
 						date:date, 
-						class:'day ', 
+						elClass:'day ', 
 						id: (calDate.getMonth() + 1) + '-' + date + '-' + calDate.getFullYear(), 
 						dayts: new Date(calDate.getFullYear(),  calDate.getMonth(), date).removeHours().getTime()
 					};
 				
 				if (j === 0 || j === 6)
-					dates[j].class += ' weekend';
+					dates[j].elClass += ' weekend';
 					
 				if (now.getDate() === date && current) {
-					dates[j].class += ' today';
+					dates[j].elClass += ' today';
 				}
 				
 			}
@@ -164,7 +171,7 @@ Calendar.prototype =  {
 			newYear = oldCal.year();
 		}
 		
-		var newDate = new Date(newYear, newMonth, 1)
+		var newDate = new Date(newYear, newMonth, 1);
 		cal = new Calendar (newDate);
 
 		cal.prevMonth = newDate.monthName();
@@ -183,7 +190,7 @@ Calendar.prototype =  {
 			newYear = oldCal.year();
 		}
 		
-		var newDate = new Date(newYear, newMonth, 1)
+		var newDate = new Date(newYear, newMonth, 1);
 		cal = new Calendar (newDate);
 		
 		cal.nextMonth = newDate.monthName();
@@ -202,7 +209,7 @@ Calendar.prototype =  {
 			newYear = oldCal.year();
 		}
 		
-		var newDate = new Date(newYear, newMonth, 1)
+		var newDate = new Date(newYear, newMonth, 1);
 		cal = new Calendar (newDate);
 		
 		cal.nextMonth = newDate.monthName();
@@ -216,11 +223,9 @@ Calendar.prototype =  {
 	},
 	updateCalendar: function() {
 		Session.set('calendar', this); 
-	  	Session.set('year', this.year());
-	  	Session.set('month', this.month());
-	  	Session.set('weeks', this.weeks());
-		
-		
+		Session.set('year', this.year());
+		Session.set('month', this.month());
+		Session.set('weeks', this.weeks());		
 	},
 	markDates: function(habit_id, dates, removeAll) {
 		//hmmm this cannot update when the calendar updates, only when dates are changed. needs to go both ways.
@@ -233,22 +238,19 @@ Calendar.prototype =  {
 		$checkMarks.remove();
 		
 		_.each(dates, function(date) {
-			  var ts = new Date(date).removeHours().getTime();
-			  var $el = $('*[data-ts="' + ts + '"]');
+			var ts = new Date(date).removeHours().getTime();
+			var $el = $('*[data-ts="' + ts + '"]');
 			
-			  if (!removeAll) {		
-				  $el
+			if (!removeAll) {		
+				$el
 					.addClass('completed')
 					.append(html);
-					
-			  } else {
-				  $el
-			      	.find('.icon-ok:last').remove()
+			} else {
+				$el
+					.find('.icon-ok:last').remove()
 					.removeClass('completed');
-		      }
+			}
 		});
-		
-		
 	},
 	clockUpdate : function() {
 		var time = new Date().formatTime();

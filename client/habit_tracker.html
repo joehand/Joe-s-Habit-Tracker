@@ -21,10 +21,11 @@
 			<!--Sidebar content-->
 			 <div class="row-fluid">
 					<!--
-			  		<div id="createUser" class="span2 offset10">
-			    		<input type="text" id="new-user" class="input-mini" placeholder="New user" />
+			  		<div id="createList" class="span2 offset10">
+			    		<input type="text" id="new-list" class="input-mini" placeholder="New list" />
 			  		</div>-->
-					{{> users}}
+					{{> lists}}
+					{{> loginButtons}}
 		  		<p class="lead span9">Track your daily habits visually. Try not to break the chain.</p>
 		
 		    	{{> habits}}
@@ -37,26 +38,26 @@
 </body>
 
 
-<template name="users">
+<template name="lists">
 	<ul class="nav nav-pills">
-    	{{#each users}}		
+    	{{#each lists}}		
 			{{#if selected}}
   				<h2>{{name}}'s Habit Tracker</h2>
 				<!--
 		           <li class="dropdown {{selected}}">
-      				<a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">{{name}}'s Habit Tracker <i class="icon-user"></i></a>
+      				<a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">{{name}}'s Habit Tracker <i class="icon-list"></i></a>
 	          			
 		      
 	                <ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
 				
-    					{{#each users}}
-  			<li class="user {{#if selected}}active{{/if}}">
+    					{{#each lists}}
+  			<li class="list {{#if selected}}active{{/if}}">
 	        		{{#if editing}}
 	          			<div class="edit">
-	            			<input class="user-name-input" id="user-name-input" type="text" value="{{name}}" />
+	            			<input class="list-name-input" id="list-name-input" type="text" value="{{name}}" />
 	          			</div>
 	        		{{else}}
-	            		<a tabindex="-1" class="user-name {{name_class}}" href="/{{_id}}">
+	            		<a tabindex="-1" class="list-name {{name_class}}" href="/{{_id}}">
               					{{name}}
 						</a>
 	        		{{/if}}
@@ -72,7 +73,7 @@
 
 
 <template name="habits">
-  {{#if any_user_selected}}
+  {{#if any_list_selected}}
   <div id="items-view" class="span10">
 	  <div class="control-group span10" id="new-habit-box">
 		<div class="controls ">
@@ -105,6 +106,21 @@
       </div>
     {{/if}}	
 
+	{{#if currentUser}}
+      <div class="toggle-privacy-wrapper">
+      <div class="toggle-privacy tag">
+        {{#if privateTo}}
+          <span class="make-public">
+            make public
+          </span>
+        {{else}}
+          <span class="make-private">
+            make private
+          </span>
+        {{/if}}
+      </div>
+      </div>
+    {{/if}}
 	
       {{#if adding_date}}
   <div class="control-group">
@@ -139,7 +155,7 @@
 
 
 <template name="tag_filter">
-  <div id="tag-filter" class="well tag-user span11">
+  <div id="tag-filter" class="well tag-list span11">
     {{#each tags}}
       <div class="pull-left tag {{selected}}">
 		{{#if selected}}
@@ -187,7 +203,7 @@
 					{{#each weeks}}
 					<tr>
 						{{#each dates}}
-							<td class="{{this.class}}" id="{{this.id}}" data-ts="{{this.dayts}}">{{this.date}}<div id="checkMark"></div>
+							<td class="{{this.elClass}}" id="{{this.id}}" data-ts="{{this.dayts}}">{{this.date}}<div id="checkMark"></div>
 							</td>
 						{{/each}}
 					</tr>

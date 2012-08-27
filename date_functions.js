@@ -1,8 +1,6 @@
 
 //some date functions
 Date.prototype.countWeeksOfMonth = function() {
-  var year         = this.getFullYear();
-  var month_number = this.getMonth();
   var used         = this.firstOfMonth() + this.lastOfMonth();
   return Math.ceil( used / 7);
 };
@@ -31,7 +29,7 @@ Date.prototype.monthName = function() {
 Date.prototype.daysInMonth = function(month) {
 	var days = [31,28,31,30,31,30,31,31,30,31,30,31];
 	// Leap year
-	if(this.getYear()%4 == 0){
+	if(this.getYear()%4 === 0){
 		days[1] = 29;
 	}
 	return days[this.getMonth()];
@@ -54,14 +52,17 @@ Date.prototype.formatTime = function () {
 
 	var tt = "AM";
 	var hh = this.getHours();
-	var nn = "0" + this.getMinutes()
+	var nn = "0" + this.getMinutes();
 
 	if(this.getHours()>12){
 		hh = this.getHours()-12;
 		tt = "PM";
-	} else if (this.getHours()===12 || this.getHours() ==0) {
+	} else if (this.getHours()===12 || this.getHours() === 0) {
 		hh = 12;
-		this.getHours() === 12 ? tt = "PM" : tt = "AM";
+		if (this.getHours() === 12)
+			tt = "PM";
+		else
+			tt = "AM";
 	}		
 	return hh + ":" + nn.substr(-2) + " " + tt;
 };

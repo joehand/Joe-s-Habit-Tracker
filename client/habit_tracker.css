@@ -325,5 +325,20 @@ text-shadow: 0px 1px 1px #000;
 #tag-filter .selected .badge {
 	color:#333;
 }
+.toggle-privacy-wrapper {
+    float: right;
+    width: 110px;
+}
 
+.toggle-privacy {
+    margin-top: 15px;
+    float: right;
+    cursor: pointer;
+}
+
+.login-bar {
+    float: right;
+    /* center login buttons vertically in our top bar */
+    padding: 10px 10px 0px 0px;
+}
 

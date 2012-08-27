@@ -1,11 +1,11 @@
 // Client-side JavaScript, bundled and sent to client.
 
 // Define Minimongo collections to match server/publish.js.
-Users = new Meteor.Collection("users");
+Lists = new Meteor.Collection("lists");
 Habits = new Meteor.Collection("habits");
 
-// ID of currently selected user
-Session.set('user_id', null);
+// ID of currently selected list
+Session.set('list_id', null);
 
 // Name of currently selected tag for filtering
 Session.set('tag_filter', null);
@@ -15,28 +15,28 @@ Session.set('editing_addtag', null);
 // When adding date to a habit, ID of the habit
 Session.set('editing_date', null);
 
-// When editing a user name, ID of the user
-Session.set('editing_username', null);
+// When editing a list name, ID of the list
+Session.set('editing_listname', null);
 
 // When editing habit text, ID of the habit
 Session.set('editing_itemname', null);
 
 
-// Subscribe to 'users' collection on startup.
-// Select a user once data has arrived.
-Meteor.subscribe('users', function () {
-  if (!Session.get('user_id')) {
-    var user = Users.findOne({}, {sort: {name: 1}});
-    if (user)
-      Router.setUser(user._id);
+// Subscribe to 'lists' collection on startup.
+// Select a list once data has arrived.
+Meteor.subscribe('lists', function () {
+  if (!Session.get('list_id')) {
+    var list = Lists.findOne({}, {sort: {name: 1}});
+    if (list)
+      Router.setList(list._id);
   }
 });
 
-// Always be subscribed to the habits for the selected user.
+// Always be subscribed to the habits for the selected list.
 Meteor.autosubscribe(function () {
-  var user_id = Session.get('user_id');
-  if (user_id)
-    Meteor.subscribe('habits', user_id);
+  var list_id = Session.get('list_id');
+  if (list_id)
+    Meteor.subscribe('habits', list_id);
 });
 
 
@@ -79,64 +79,64 @@ var focus_field_by_id = function (id) {
     input.select();
   }
 };
-////////// Users //////////
+////////// Lists //////////
 
-Template.users.users = function () {
-  return Users.find({}, {sort: {name: 1}});
+Template.lists.lists = function () {
+  return Lists.find({}, {sort: {name: 1}});
 };
 
-Template.users.events = {
-  'mousedown .user': function (evt) { // select user
-    Router.setUser(this._id);
+Template.lists.events = {
+  'mousedown .list': function (evt) { // select list
+    Router.setList(this._id);
   },
-  'click .user': function (evt) {
+  'click .list': function (evt) {
     // prevent clicks on <a> from refreshing the page.
     evt.preventDefault();
   },
-  'dblclick .user': function (evt) { // start editing user name
-    Session.set('editing_username', this._id);
+  'dblclick .list': function (evt) { // start editing list name
+    Session.set('editing_listname', this._id);
     Meteor.flush(); // force DOM redraw, so we can focus the edit field
-    focus_field_by_id("user-name-input");
+    focus_field_by_id("list-name-input");
   }
 };
 
-Template.users.events[ okcancel_events('#user-name-input') ] =
+Template.lists.events[ okcancel_events('#list-name-input') ] =
   make_okcancel_handler({
     ok: function (value) {
-      Users.update(this._id, {$set: {name: value}});
-      Session.set('editing_username', null);
+      Lists.update(this._id, {$set: {name: value}});
+      Session.set('editing_listname', null);
     },
     cancel: function () {
-      Session.set('editing_username', null);
+      Session.set('editing_listname', null);
     }
   });
 
-// Attach events to keydown, keyup, and blur on "New user" input box.
-Template.users.events[ okcancel_events('#new-user') ] =
+// Attach events to keydown, keyup, and blur on "New list" input box.
+Template.lists.events[ okcancel_events('#new-list') ] =
   make_okcancel_handler({
     ok: function (text, evt) {
-      var id = Users.insert({name: text});
-      Router.setUser(id);
+      var id = Lists.insert({name: text});
+      Router.setList(id);
       evt.target.value = "";
     }
   });
 
-Template.users.selected = function () {
-  return Session.equals('user_id', this._id) ? 'selected' : '';
+Template.lists.selected = function () {
+  return Session.equals('list_id', this._id) ? 'selected' : '';
 };
 
-Template.users.name_class = function () {
+Template.lists.name_class = function () {
   return this.name ? '' : 'empty';
 };
 
-Template.users.editing = function () {
-  return Session.equals('editing_username', this._id);
+Template.lists.editing = function () {
+  return Session.equals('editing_listname', this._id);
 };
 
 ////////// Habits //////////
 
-Template.habits.any_user_selected = function () {
-  return !Session.equals('user_id', null);
+Template.habits.any_list_selected = function () {
+  return !Session.equals('list_id', null);
 };
 
 Template.habits.events = {};
@@ -147,7 +147,7 @@ Template.habits.events[ okcancel_events('#new-habit') ] =
       var tag = Session.get('tag_filter');
       Habits.insert({
         text: text,
-        user_id: Session.get('user_id'),
+        list_id: Session.get('list_id'),
         done: false,
         created: (new Date().getTime()),
         timestamp: null,
@@ -161,13 +161,13 @@ Template.habits.events[ okcancel_events('#new-habit') ] =
 
 Template.habits.habits = function () {
   // Determine which habits to display in main pane,
-  // selected based on user_id and tag_filter.
+  // selected based on list_id and tag_filter.
 
-  var user_id = Session.get('user_id');
-  if (!user_id)
+  var list_id = Session.get('list_id');
+  if (!list_id)
     return {};
 
-  var sel = {user_id: user_id};
+  var sel = {list_id: list_id};
   var tag_filter = Session.get('tag_filter');
   if (tag_filter)
     sel.tags = tag_filter;
@@ -177,17 +177,18 @@ Template.habits.habits = function () {
   //checking if list hasn't been updated since yesterday
   //there has got to be a better way to do this!
   if (Habits.findOne(sel)) {	
-	  var prevTime = Habits.findOne(sel,{sort: {timestamp: -1}}).timestamp;	
-	  
-	  //if a habit was done previously, i grab that time and add it to the history then reset it!
-	  if (prevTime != today && prevTime != '') {	
-		 _.each(Habits._collection.docs, function(habit) {
-			if (habit.done)
-				habit.history.push(prevTime);			
-			habit.done = false;
-			habit.timestamp = null;
+	var prevTime = Habits.findOne(sel,{sort: {timestamp: -1}}).timestamp;
+
+	//if a habit was done previously, i grab that time and add it to the history then reset it!
+	if (prevTime != today && prevTime !== '') {	
+		_.each(Habits._collection.docs, function(habit) {
+		if (habit.done)
+			habit.history.push(prevTime);
+		
+		habit.done = false;
+		habit.timestamp = null;
 		});
-	  }
+	}
   }
 
   return Habits.find(sel, {sort: {done:1, text:1}});
@@ -223,58 +224,61 @@ Template.habit_item.adding_tag = function () {
 };
 
 Template.habit_item.events = {
-  'click .check': function () {
-	var today = new Date().removeHours().getTime();	
-	if (this.done) {
-		//whoops, not done: remove from history;
-		Habits.update(this._id,
-			{
-				$set: {timestamp: '', done: !this.done},
-			 	$pull: {history:today}
-			}
-		);
-	} else {
-		//add to history;
-		Habits.update(this._id, 
-			{$addToSet: {history: today},
-		     $set: {timestamp: today, done: !this.done}}
-		); 
-	}
-	
-  },
-  'click .destroy': function () {	
-	Session.get('calendar').markDates(this._id, this.history, true);
-    Habits.remove(this._id);
-  },
+	'click .check': function () {
+		var today = new Date().removeHours().getTime();	
+		if (this.done) {
+			//whoops, not done: remove from history;
+			Habits.update(this._id,
+				{
+					$set: {timestamp: '', done: !this.done},
+					$pull: {history:today}
+				}
+			);
+		} else {
+			//add to history;
+			Habits.update(this._id, 
+				{$addToSet: {history: today},
+				$set: {timestamp: today, done: !this.done}
+			}); 
+		}	
+	},
+	'click .destroy': function () {	
+		Session.get('calendar').markDates(this._id, this.history, true);
+		Habits.remove(this._id);
+	},
+	'click .addtag': function (evt) {
+		Session.set('editing_addtag', this._id);
+		Meteor.flush(); // update DOM before focus
+		focus_field_by_id("edittag-input");
+	},
+	'click .display .habit-text': function (evt) {
+		Session.set('editing_date', this._id);
+		Meteor.flush(); // update DOM before focus
+		focus_field_by_id("date-input");
+	},
+	'dblclick .display .habit-text': function (evt) {
+		Session.set('editing_itemname', this._id);
+		Meteor.flush(); // update DOM before focus
+		focus_field_by_id("habit-input");
+	},
+	'click .remove': function (evt) {
+		var tag = this.tag;
+		var id = this.habit_id;
 
-  'click .addtag': function (evt) {
-    Session.set('editing_addtag', this._id);
-    Meteor.flush(); // update DOM before focus
-    focus_field_by_id("edittag-input");
-  },
-  'click .display .habit-text': function (evt) {
-	    Session.set('editing_date', this._id);
-	    Meteor.flush(); // update DOM before focus
-	    focus_field_by_id("date-input");
-  },
-
-  'dblclick .display .habit-text': function (evt) {
-    Session.set('editing_itemname', this._id);
-    Meteor.flush(); // update DOM before focus
-    focus_field_by_id("habit-input");
-  },
-
-  'click .remove': function (evt) {
-    var tag = this.tag;
-    var id = this.habit_id;
-
-    evt.target.parentNode.style.opacity = 0;
-    // wait for CSS animation to finish
-    Meteor.setTimeout(function () {
-      Habits.update({_id: id}, {$pull: {tags: tag}});
-    }, 300);
-  }
-
+		evt.target.parentNode.style.opacity = 0;
+		// wait for CSS animation to finish
+		Meteor.setTimeout(function () {
+			Habits.update(id, {$pull: {tags: tag}});
+			}, 300);
+	},
+	'click .make-public': function () {
+		Habits.update(this._id, {$set: {privateTo: null}});
+	},	
+	'click .make-private': function () {	
+		Habits.update(this._id, {$set: {	
+			privateTo: Meteor.user()._id	
+		}});
+	}	
 };
 
 
@@ -302,26 +306,26 @@ Template.habit_item.events[ okcancel_events('#edittag-input') ] =
 
 
 Template.habit_item.events[ okcancel_events('#date-input') ] =
-  make_okcancel_handler({
-    ok: function (value) {
-	  var parts = value.match(/(\d+)/g);		
-	  var timestamp = new Date(parts[0], parts[1]-1, parts[2]).removeHours().getTime();
-      Habits.update(this._id, {$addToSet: {history: timestamp}});
-      Session.set('editing_date', null);
-    },
-    cancel: function () {
-      Session.set('editing_date', null);
-    }
-  });
+	make_okcancel_handler({
+		ok: function (value) {
+		var parts = value.match(/(\d+)/g);		
+		var timestamp = new Date(parts[0], parts[1]-1, parts[2]).removeHours().getTime();
+		Habits.update(this._id, {$addToSet: {history: timestamp}});
+		Session.set('editing_date', null);
+	},
+		cancel: function () {
+			Session.set('editing_date', null);
+		}
+	});
 
 ////////// Tag Filter //////////
 
-// Pick out the unique tags from all habits in current user.
+// Pick out the unique tags from all habits in current list.
 Template.tag_filter.tags = function () {
   var tag_infos = [];
   var total_count = 0;
 
-  Habits.find({user_id: Session.get('user_id')}).forEach(function (habit) {
+  Habits.find({list_id: Session.get('list_id')}).forEach(function (habit) {
     _.each(habit.tags, function (tag) {
       var tag_info = _.find(tag_infos, function (x) { return x.tag === tag; });
       if (! tag_info)
@@ -348,140 +352,45 @@ Template.tag_filter.selected = function () {
 };
 
 Template.tag_filter.events = {
-  'mousedown .tag': function () {
-    if (Session.equals('tag_filter', this.tag)) {
-      Session.set('tag_filter', null);
-	  Habits.find({user_id: Session.get('user_id')}).forEach(function (habit) {
-	  	Session.get('calendar').markDates(habit._id, habit.history);
-	  });
-	} else {
-		
-		Habits.find({user_id: Session.get('user_id')}).forEach(function (habit) {
-			if (_.include(habit.tags, Session.get('tag_filter'))) {
-		  		Session.get('calendar').markDates(habit._id, habit.history);	
-			} else {
-			  	Session.get('calendar').markDates(habit._id, habit.history, true);
-			}
-		});
-		Session.set('tag_filter', this.tag);
+	'mousedown .tag': function () {
+		if (Session.equals('tag_filter', this.tag)) {
+			Session.set('tag_filter', null);
+			Habits.find({list_id: Session.get('list_id')}).forEach(function (habit) {
+				Session.get('calendar').markDates(habit._id, habit.history);
+			});
+		} else {
+			Habits.find({list_id: Session.get('list_id')}).forEach(function (habit) {
+				if (_.include(habit.tags, Session.get('tag_filter'))) {
+					Session.get('calendar').markDates(habit._id, habit.history);	
+				} else {
+					Session.get('calendar').markDates(habit._id, habit.history, true);
+				}
+			});
+			Session.set('tag_filter', this.tag);
+		}
 	}
-
-  }
 };
 
-////////// Tracking selected user in URL //////////
+////////// Tracking selected list in URL //////////
 
 var HabitsRouter = Backbone.Router.extend({
   routes: {
-    ":user_id": "main"
+    ":list_id": "main",
+	":user_id": "main"
   },
-  main: function (user_id) {
-    Session.set("user_id", user_id);
+  main: function (list_id) {
+    Session.set("list_id", list_id);
     Session.set("tag_filter", null);
   },
-  setUser: function (user_id) {
-    this.navigate(user_id, true);
+  setList: function (list_id) {
+    this.navigate(list_id, true);
   }
 });
 
-Router = new HabitsRouter;
+Router = new HabitsRouter();
 
 Meteor.startup(function () {
   Backbone.history.start({pushState: true});
 });
 		
-/*
-  Template.entry.events = {
-    'click button#status': function(evt) {
-	    $target = $(evt.target);
-	    tarValue = evt.target.value
-		var states = [{
-				class: 'btn btn-mini btn-success success',
-				value: true,
-				text: 'Habit Done!'
-			},
-			{
-				class: 'btn btn-mini btn-warning success',
-				value: null,
-				text: 'Not Done'
-			}];
-		
-		if (tarValue === 'true') {	
-			var myState = states[1];
-			setState(myState);
-		} else {	
-			var myState = states[0];
-			setState(myState);
-		}
-		
-		
-		function setState(state) {
-			evt.target.value = state.value;
-			$target.attr("class", state.class);
-			$target.html(state.text);
-		}
-		return;
-    }
-  };
-	
-  Template.entry.events[okcancel_events('input')] = make_okcancel_handler({
-    	ok: function(event) {
-			Form.submit(event);
-		}
-  });
-	
-  Template.habits.habits = function () {
-	
-	var habits = Habits.find({}, {sort: {date: -1} });
-	var count = 0, habitDisplay = [];
-	
-	habits.forEach(function (habit) {
-	  habitDisplay.push({name: habit.name, notes: habit.notes, date: habit.date, status: habit.status});
-	  count += 1;
-	});
-	
-	return habitDisplay;
-  };
-
-  Template.entry.today = function() {
-	    var d = new Date().formatDate();
-		return d;
-  };
-
- */
-
-
-
-
-/*
-Form = {
-	submit :  function (event) {
-		var $nameEntry = $('#name');
-		var dateEntry = $('#date').val();
-		var $notesEntry = $('#notes');
-		var statusEntry = $('#status').val();
-		if ($nameEntry.val() != '') {
-			var ts = new Date();	
-			if (dateEntry === '') {
-				dateEntry = ts.formatDate();
-			}
-			Habits.insert({name: $nameEntry.val(), status: statusEntry, notes: $notesEntry.val(), date: dateEntry, timeStamp: ts});
-			$nameEntry.className = "";
-			this.clear([$('#date'), $nameEntry, $notesEntry]);
-		} else {
-			console.log('fail');
-			$nameEntry.addClass("required");
-		}
-	},
-	clear : function(elements) {
-		_.each(elements, function (element) {
-			element.val('');
-	  	});
-	}
-};
-
-*/
-
-
-
 

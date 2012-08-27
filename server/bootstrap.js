@@ -1,8 +1,8 @@
 // if the database is empty on server start, create some sample data.
 Meteor.startup(function () {
-  if (Users.find().count() === 0) {
+  if (Lists.find().count() === 0) {
     var data = [
-      {name: "Meteor Principles",
+      /*{name: "Meteor Principles",
        contents: [
          ["Data on the Wire", "Simplicity", "Better UX", "Fun"],
          ["One Language", "Simplicity", "Fun"],
@@ -25,30 +25,83 @@ Meteor.startup(function () {
          ["Erlang", "GC"],
          ["6502 Assembly", "Linked"]
          ]
-      },
-      {name: "Favorite Scientists",
+      },*/
+      {name: "Main Habits",
        contents: [
-         ["Ada Lovelace", "Computer Science"],
-         ["Grace Hopper", "Computer Science"],
-         ["Marie Curie", "Physics", "Chemistry"],
-         ["Carl Friedrich Gauss", "Math", "Physics"],
-         ["Nikola Tesla", "Physics"],
-         ["Claude Shannon", "Math", "Computer Science"]
+			{
+				text : "Morning Walk",
+				tags : ["recovery",
+			      "relaxation"],
+				history : [1345791600000,
+				      1345705200000,
+				      1345532400000
+				   	]
+			},
+			{
+				text : "Exercise",
+				tags : ["health",
+			      "exercise"],
+				history : [1345791600000,
+			      1345705200000,
+			      1345618800000,
+			      1345446000000]
+			},
+			{
+				text : "Brush & Floss (Morning)",
+				tags : ["teeth", "health"],
+				history : [1345791600000,
+				      1345705200000,
+				      1345618800000,
+				      1345532400000]
+			},
+			{
+				text :"Brush & Rinse (Evening)",
+				tags : ["teeth",
+				      "health"],
+				history : [  1345791600000]
+			},
+			{
+				text : "Drink Water",
+				tags : ["health"],
+				history : []
+			},
+			{
+				text : "Foam Roll 15min",
+				tags : ["exercise",
+			      "recovery"],
+				history : [ ]
+			},
+			{
+				text : "Write 750 Words",
+				tags : ["brain","writing"],
+				history : [ 
+			      1345964400000,
+			      1345878000000,
+			      1345705200000,
+			      1345618800000,
+			      1345446000000,
+			      1345791600000,
+			      1345532400000,
+			      1345359600000,
+			      ]
+			}
        ]
       }
     ];
 
     var timestamp = (new Date()).getTime();
     for (var i = 0; i < data.length; i++) {
-      var user_id = Users.insert({name: data[i].name});
+      var list_id = Lists.insert({name: data[i].name});
       for (var j = 0; j < data[i].contents.length; j++) {
         var info = data[i].contents[j];
-        Habits.insert({user_id: user_id,
-                      text: info[0],
-                      timestamp: timestamp,
-                      tags: info.slice(1)});
+        Habits.insert({list_id: list_id,
+                      text: info.text,
+                      created: timestamp,
+                      tags: info.tags,
+                      history: info.history});
         timestamp += 1; // ensure unique timestamp.
       }
     }
   }
 });
+
