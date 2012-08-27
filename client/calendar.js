@@ -9,52 +9,52 @@ Session.set('time', null);
 
 if (Meteor.is_client) {
  /*CALENDAR Templates*/
-  
 
- 	Meteor.startup(function () {
-	   var cal = new Calendar()
-	   Session.set('calendar', cal);
-	   Session.set('year', cal.year());
-	   Session.set('month', cal.month());
-	   Session.set('time', cal.now.formatTime());
-	   timeInterval();
-	 });
+	Meteor.startup(function () {
+		var cal = new Calendar();
+		Session.set('calendar', cal);
+		Session.set('year', cal.year());
+		Session.set('month', cal.month());
+		Session.set('time', cal.now.formatTime());
+		Meteor.setInterval(cal.clockUpdate, 30000);
+	});
 
-  Template.calendar.ts = function() {
-	  return new Date().getTime() || Session.get('calendar').calDate.getTime() ;
-  };
-
-  Template.calendar.year = function() {
-	  return Session.get('year') || new Calendar().year();
-  };
-
-  Template.calendar.month = function() {	  
-	  var cal = Session.get('calendar') || new Calendar();
-	   var next = cal.nextMonthName(cal).nextMonth;
-	   var prev = cal.previousMonth().prevMonth;
-	   var month = {
-				current: cal.month(),
-				prev: prev,
-				next: next
-	  		}
-	   return month;
-  };
-
-  Template.calendar.weeks = function() {
-	  return Session.get('weeks') || new Calendar().weeks();
-  };
-
-  Template.calendar.days = function() {
-  	  return new Calendar().days;
-   };
-
-  Template.calendar.time = function() {
-	 return Session.get('time') || new Date().formatTime();
-  };
-
-  Template.calendar.events = {
-  	'click .next': function (evt) {
-	    var cal = null;
+	Template.calendar.ts = function() {
+		return new Date().getTime() || Session.get('calendar').calDate.getTime() ;
+	};
+	
+	Template.calendar.year = function() {
+		return Session.get('year') || new Calendar().year();
+	};
+	
+	Template.calendar.month = function() {	  
+		var cal = Session.get('calendar') || new Calendar(),
+			next = cal.nextMonthName(cal).nextMonth,
+			prev = cal.previousMonth().prevMonth;
+			
+		var month = {
+						current: cal.month(),
+						prev: prev,
+						next: next
+		}
+		return month;
+	};
+	
+	Template.calendar.weeks = function() {
+	    return Session.get('weeks') || new Calendar().weeks();
+	};
+	
+	Template.calendar.days = function() {
+		  return new Calendar().days;
+	 };
+	
+	Template.calendar.time = function() {
+	   return Session.get('time') || new Date().formatTime();
+	};
+	
+	Template.calendar.events = {
+		'click .next': function (evt) {
+	      var cal = null;
 	    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
 		cal = cal.nextMonthName(cal);
 			cal.updateCalendar();
@@ -76,16 +76,6 @@ if (Meteor.is_client) {
 }
 
 
-
-var timeInterval = function() {
-	var timer = function(){
-		timeInterval();
-	}
-	time = new Date().formatTime();
-	$('.time').html(time);
-	
-	setTimeout(timer,10000);
-}
 
 var Calendar = function(calDate) {
 	this.now = new Date();
@@ -259,6 +249,9 @@ Calendar.prototype =  {
 		});
 		
 		
+	},
+	clockUpdate : function() {
+		var time = new Date().formatTime();
+		$('.time').html(time);
 	}
-	
 };
