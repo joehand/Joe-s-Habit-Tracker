@@ -9,3 +9,6 @@ jquery
 backbone
 accounts-ui
 accounts-passwords
+accounts
+accounts-google
+accounts-twitter

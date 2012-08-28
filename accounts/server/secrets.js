@@ -2,4 +2,6 @@
 // Also see accounts/services.js
 
 // Meteor.accounts.facebook.setSecret('SECRET');
-// Meteor.accounts.google.setSecret('SECRET');
+ Meteor.accounts.google.setSecret('ZTsHd2mUDk-sMU0FcX81coju');
+ Meteor.accounts.twitter.setSecret('YoINJAp4wPquursrasWaQmDiljBic9Br36BD1iLvhw');
+
