@@ -207,7 +207,7 @@ Template.habits.habits = function () {
 
 	//if a habit was done previously, i grab that time and add it to the history then reset it!
 	if (prevTime != today && prevTime !== '') {	
-		_.each(Habits.find({}).fetch(), function(habit) {
+		_.each(Habits.find(sel).fetch(), function(habit) {
 		if (habit.done)
 			habit.history.push(prevTime);
 		
@@ -216,8 +216,7 @@ Template.habits.habits = function () {
 		});
 	}
   }
-  	
-  console.log(Habits.find(sel, {sort: {done:1, text:1}}));
+
   return Habits.find(sel, {sort: {done:1, text:1}});
 };
 
@@ -346,8 +345,15 @@ Template.habit_item.events[ okcancel_events('#date-input') ] =
 Template.tag_filter.tags = function () {
   var tag_infos = [];
   var total_count = 0;
-
-  Habits.find({list_id: Session.get('list_id')}).forEach(function (habit) {
+  var user_id = Meteor.user();
+  var list_id = Session.get('list_id');
+  
+  if (user_id)
+  	var sel = {list_id: list_id, privateTo: Meteor.user()._id};
+  else
+	var sel = {list_id: list_id};
+	
+  Habits.find(sel).forEach(function (habit) {
     _.each(habit.tags, function (tag) {
       var tag_info = _.find(tag_infos, function (x) { return x.tag === tag; });
       if (! tag_info)
@@ -375,13 +381,21 @@ Template.tag_filter.selected = function () {
 
 Template.tag_filter.events = {
 	'mousedown .tag': function () {
+	  var user_id = Meteor.user();
+	  var list_id = Session.get('list_id');
+
+	  if (user_id)
+	  	var sel = {list_id: list_id, privateTo: Meteor.user()._id};
+	  else
+		var sel = {list_id: list_id};
+		
 		if (Session.equals('tag_filter', this.tag)) {
 			Session.set('tag_filter', null);
-			Habits.find({list_id: Session.get('list_id')}).forEach(function (habit) {
+			Habits.find(sel).forEach(function (habit) {
 				Session.get('calendar').markDates(habit._id, habit.history);
 			});
 		} else {
-			Habits.find({list_id: Session.get('list_id')}).forEach(function (habit) {
+			Habits.find(sel).forEach(function (habit) {
 				if (_.include(habit.tags, Session.get('tag_filter'))) {
 					Session.get('calendar').markDates(habit._id, habit.history);	
 				} else {
