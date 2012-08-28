@@ -131,21 +131,22 @@ Calendar.prototype =  {
 			now = this.now;	
 		_.each(dates, function(day, j) {
 			if ((i === 0 && j < calDate.firstOfMonth()) || date >= calDate.daysInMonth()) {
-				dates[j] = {date:'', class:'', id:'', ts: ''};
+				dates[j] = {date:'', elClass:'', id:'', ts: ''};
 			} else{
 				date += 1;
 				dates[j] = {
 						date:date, 
-						class:'day ', 
+						elClass:'day ', 
 						id: (calDate.getMonth() + 1) + '-' + date + '-' + calDate.getFullYear(), 
 						dayts: new Date(calDate.getFullYear(),  calDate.getMonth(), date).removeHours().getTime()
 					};
 				
 				if (j === 0 || j === 6)
-					dates[j].class += ' weekend';
+					dates[j].elClass += ' weekend';
 					
-				if (now.getDate() === date && current) {
-					dates[j].class += ' today';
+				if (parseInt(now.getDate()) === parseInt(date) && current) {
+					dates[j].elClass += ' today';
+					console.log('current');
 				}
 				
 			}
