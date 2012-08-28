@@ -26,7 +26,7 @@ Session.set('editing_itemname', null);
 // Select a list once data has arrived.
 Meteor.subscribe('lists', function () {
   if (!Session.get('list_id')) {
-    var list = Lists.findOne({}, {sort: {name: 1}});
+    var list = Lists.findOne({privateId:null}, {sort: {name: 1}});
     if (list)
       Router.setList(list._id);
   }
@@ -79,6 +79,7 @@ var focus_field_by_id = function (id) {
     input.select();
   }
 };
+
 ////////// Lists //////////
 
 Template.lists.lists = function () {
@@ -103,7 +104,10 @@ Template.lists.events = {
 Template.lists.events[ okcancel_events('#list-name-input') ] =
   make_okcancel_handler({
     ok: function (value) {
-      Lists.update(this._id, {$set: {name: value}});
+	console.log('ok!');
+      Lists.update(this._id, {$set: 
+				{name: value, privateTo: Meteor.user()._id}
+			});
       Session.set('editing_listname', null);
     },
     cancel: function () {
@@ -153,7 +157,8 @@ Template.habits.events[ okcancel_events('#new-habit') ] =
         timestamp: null,
         tags: tag ? [tag] : [],
         history: [],
-		streak: 0
+		streak: 0,
+		privateTo: Meteor.user()._id
       });
       evt.target.value = '';
     }
@@ -163,15 +168,20 @@ Template.habits.habits = function () {
   // Determine which habits to display in main pane,
   // selected based on list_id and tag_filter.
 
+  
+  var user_id = Meteor.user();
   var list_id = Session.get('list_id');
   if (!list_id)
     return {};
-
-  var sel = {list_id: list_id};
+  
+  if (user_id)
+  	var sel = {list_id: list_id, privateTo: Meteor.user()._id};
+  else
+	var sel = {list_id: list_id};
   var tag_filter = Session.get('tag_filter');
   if (tag_filter)
     sel.tags = tag_filter;
-  
+  	
   var today = new Date().removeHours().getTime();
 
   //checking if list hasn't been updated since yesterday
@@ -181,7 +191,7 @@ Template.habits.habits = function () {
 
 	//if a habit was done previously, i grab that time and add it to the history then reset it!
 	if (prevTime != today && prevTime !== '') {	
-		_.each(Habits._collection.docs, function(habit) {
+		_.each(Habits.find({}).fetch(), function(habit) {
 		if (habit.done)
 			habit.history.push(prevTime);
 		
@@ -190,7 +200,8 @@ Template.habits.habits = function () {
 		});
 	}
   }
-
+  	
+  console.log(Habits.find(sel, {sort: {done:1, text:1}}));
   return Habits.find(sel, {sort: {done:1, text:1}});
 };
 
@@ -274,7 +285,7 @@ Template.habit_item.events = {
 	'click .make-public': function () {
 		Habits.update(this._id, {$set: {privateTo: null}});
 	},	
-	'click .make-private': function () {	
+	'click .make-private': function () {
 		Habits.update(this._id, {$set: {	
 			privateTo: Meteor.user()._id	
 		}});

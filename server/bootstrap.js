@@ -26,7 +26,7 @@ Meteor.startup(function () {
          ["6502 Assembly", "Linked"]
          ]
       },*/
-      {name: "Main Habits",
+      {name: "Joe's Habits",
        contents: [
 			{
 				text : "Morning Walk",
@@ -88,7 +88,7 @@ Meteor.startup(function () {
        ]
       }
     ];
-
+	
     var timestamp = (new Date()).getTime();
     for (var i = 0; i < data.length; i++) {
       var list_id = Lists.insert({name: data[i].name});

@@ -1,7 +1,8 @@
+
 Meteor.startup(function() {
-  var canModify = function(userId, tasks) {
-    return _.all(tasks, function(task) {
-      return !task.privateTo || task.privateTo === userId;
+  var canModify = function(userId, items) {
+    return _.all(items, function(item) {
+      return !item.privateTo || item.privateTo === userId;
     });
   };
 
@@ -13,7 +14,9 @@ Meteor.startup(function() {
   });
 
   Lists.allow({
-    insert: function () { return true; }
-    // can't update or remove
+    insert: function () { return true; },
+    update: canModify,
+    remove: canModify,
+    fetch: ['privateTo']
   });
 });
