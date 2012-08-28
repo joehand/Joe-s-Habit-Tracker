@@ -147,19 +147,35 @@ Template.habits.events = {};
 
 Template.habits.events[ okcancel_events('#new-habit') ] =
   make_okcancel_handler({
-    ok: function (text, evt) {
-      var tag = Session.get('tag_filter');
-      Habits.insert({
-        text: text,
-        list_id: Session.get('list_id'),
-        done: false,
-        created: (new Date().getTime()),
-        timestamp: null,
-        tags: tag ? [tag] : [],
-        history: [],
-		streak: 0,
-		privateTo: Meteor.user()._id
-      });
+    ok: function (text, evt) {	
+	  var tag = Session.get('tag_filter');
+	  if (Meteor.user() !== null)	{
+		
+	      Habits.insert({
+	        text: text,
+	        list_id: Session.get('list_id'),
+	        done: false,
+	        created: (new Date().getTime()),
+	        timestamp: null,
+	        tags: tag ? [tag] : [],
+	        history: [],
+			streak: 0,
+			privateTo: Meteor.user()._id
+	      });
+		
+	  }  else {
+	      Habits.insert({
+	        text: text,
+	        list_id: Session.get('list_id'),
+	        done: false,
+	        created: (new Date().getTime()),
+	        timestamp: null,
+	        tags: tag ? [tag] : [],
+	        history: [],
+			streak: 0
+	      });
+	}
+		
       evt.target.value = '';
     }
   });
