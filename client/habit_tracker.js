@@ -217,10 +217,6 @@ Template.habit_item.done_class = function () {
   return this.done ? 'done' : '';
 };
 
-Template.habit_item.done_checkbox = function () {
-  return this.done ? 'checked="checked"' : '';
-};
-
 Template.habit_item.editing = function () {
   return Session.equals('editing_itemname', this._id);
 };
@@ -235,24 +231,6 @@ Template.habit_item.adding_tag = function () {
 };
 
 Template.habit_item.events = {
-	'click .check': function () {
-		var today = new Date().removeHours().getTime();	
-		if (this.done) {
-			//whoops, not done: remove from history;
-			Habits.update(this._id,
-				{
-					$set: {timestamp: '', done: !this.done},
-					$pull: {history:today}
-				}
-			);
-		} else {
-			//add to history;
-			Habits.update(this._id, 
-				{$addToSet: {history: today},
-				$set: {timestamp: today, done: !this.done}
-			}); 
-		}	
-	},
 	'click .destroy': function () {	
 		Session.get('calendar').markDates(this._id, this.history, true);
 		Habits.remove(this._id);
@@ -262,12 +240,29 @@ Template.habit_item.events = {
 		Meteor.flush(); // update DOM before focus
 		focus_field_by_id("edittag-input");
 	},
-	'click .display .habit-text': function (evt) {
+	'click .display .check': function (evt) {
+			var today = new Date().removeHours().getTime();	
+			if (this.done) {
+				//whoops, not done: remove from history;
+				Habits.update(this._id,
+					{
+						$set: {timestamp: '', done: !this.done},
+						$pull: {history:today}
+					}
+				);
+			} else {
+				//add to history;
+				Habits.update(this._id, 
+					{$addToSet: {history: today},
+					$set: {timestamp: today, done: !this.done}
+				}); 
+			}
+		/*	
 		Session.set('editing_date', this._id);
 		Meteor.flush(); // update DOM before focus
-		focus_field_by_id("date-input");
+		focus_field_by_id("date-input");*/
 	},
-	'dblclick .display .habit-text': function (evt) {
+	'click .display .edit-icon': function (evt) {
 		Session.set('editing_itemname', this._id);
 		Meteor.flush(); // update DOM before focus
 		focus_field_by_id("habit-input");

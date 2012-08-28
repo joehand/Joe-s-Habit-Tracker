@@ -192,21 +192,12 @@ text-shadow: 0px 1px 1px #000;
 }
 
 #item-list .habit {
-    overflow: hidden;
     position: relative;
 }
 
-#item-list .habit .destroy {
-    cursor: pointer;
-    position: absolute;
-    left: 5px;
-    top: 25px;
-    height: 20px;
-    width: 20px;
-}
 
 #item-list .habit .display, #item-list .habit .edit {
-    margin-left: 30px;
+    margin-left: -5px;
     height: 100%;
     width: 100%;
     float: left;
@@ -214,24 +205,44 @@ text-shadow: 0px 1px 1px #000;
     line-height: 1;
 }
 
-#habit-input {
-    top: -3px;
-	position:relative;
-	width:200px;
+#item-list .habit .edit  {
+	margin-left:0px;
+    margin-top: -7px;
+    line-height: 1;
 }
+
+#item-list li {
+	list-style-type:none;
+}
+
 
 #item-list .done .habit-text {
     text-decoration: line-through;
     color: #999;
 }
 
-#item-list .habit:hover .destroy {
-    background: url('/destroy.png') no-repeat 0 0;
+#item-list .habit .display i {
+	opacity:0;
+	  -webkit-transition: all 0.3s ease-in; 
+	     -moz-transition: all 0.3s ease-in; 
+	       -o-transition: all 0.3s ease-in; 
+	          transition: all 0.3s ease-in; 
+	padding-left:1px;
+	
+}
+#item-list .habit:hover  .display i {
+opacity:0.5;
 }
 
-#item-list .habit .destroy:hover {
-    background-position: 0 -20px;
+
+#item-list .habit .display i:hover  {
+opacity:1;
 }
+
+#item-list .habit .tags {
+	display:none;
+}
+
 
 #item-list .habit .item-tags {
     overflow: auto;
@@ -266,19 +277,10 @@ text-shadow: 0px 1px 1px #000;
     border: 1px dashed #999;
 }
 
-#item-list .habit .check {
-    float: left;
-    width: 25px;
-}
-
 #item-list .habit .habit-text {
     float: left;
     margin-left: 10px;
     font-size: 100%;
-}
-
-#item-list .habit .edit input {
-    margin-left: 35px;
 }
 
 #edittag-input {
