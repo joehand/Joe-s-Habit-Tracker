@@ -428,5 +428,4 @@ Router = new HabitsRouter();
 Meteor.startup(function () {
   Backbone.history.start({pushState: true});
 });
-		
 

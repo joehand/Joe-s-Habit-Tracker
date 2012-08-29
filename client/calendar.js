@@ -146,7 +146,6 @@ Calendar.prototype =  {
 					
 				if (parseInt(now.getDate()) === parseInt(date) && current) {
 					dates[j].elClass += ' today';
-					console.log('current');
 				}
 				
 			}
