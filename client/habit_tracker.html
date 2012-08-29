@@ -1,5 +1,5 @@
 <head>
-  <title>Habit Tracker</title>
+  <title>Streak: A Simple Habit Tracker</title>
 </head>
 
 <body>
@@ -8,7 +8,7 @@
 	  	
  
 		
-	  <div class="row-fluid page-wrap">
+	  <div class="row-fluid page-wrap">	
 	    <div class="span8 content">
 	      <!--Body content-->
 			
@@ -21,12 +21,18 @@
 	    </div>
 		<div class="span4" id="sidebar">
 		  <section class="sidebar">	
-			
+			 <h1 id="main-head">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Streak</h1>
 			<!--Sidebar content-->
 			 <div class="row-fluid">
-					{{> loginButtons}}
-		  		<p class="lead span9">Track your daily habits visually. Try not to break the chain.</p>
-		
+		  		<p class="lead span11">Track your daily habits visually. Try not to break the chain.</p>
+				
+				{{#unless currentUser}}
+				<h3 class=" span5">Start Playing</h3>
+				{{/unless}}
+				<div class="sign-in span5 pull-right">
+				<i class="icon-user pull-left"></i>
+				{{> loginButtons}}
+				</div>
 		    	{{> habits}}
 			</div>
 		  </section>
@@ -168,20 +174,23 @@
 
 <template name="calendar">
 		<div class="span12" id="calendar" data-ts="{{ts}}">
+			<div class="header">
 			<ul class="pager">
 			  <li class="previous span3">
-			    <a href="#">&larr; {{month.prev}}</a>
+			    <a href="#">{{month.prev}}</a>
 			  </li>
-					<h2 class="time span6 muted">{{time}}</h2>
+				<li class="span6">
+			  		<a href="#"><h3 class="time muted">{{time}}</h3></a>
+				 </li>
 			  <li class="next span3">
-			    <a href="#">{{month.next}} &rarr;</a>
+			    <a href="#">{{month.next}}</a>
 			  </li>
 			</ul>
-			
+			</div>
 
 			<div class="row-fluid">
-				<h3 class="month pull-left">{{month.current}}</h3>
-				<h1 class="year  ">{{year}}</h1>
+				<h2 class="month pull-left">{{month.current}}</h2>
+				<h3 class="year  ">{{year}}</h3>
 			</div>
 
 

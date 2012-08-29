@@ -12,6 +12,15 @@ body {
   background-color: #F3F3F3;
   position: relative;
   font-family: 'PT Sans',Helvetica,sans-serif;
+  color:#595559;
+}
+
+a {
+	color:#1A5575;
+}
+
+a:hover {
+	opacity:0.7;
 }
 
 
@@ -35,36 +44,85 @@ input:required:valid, textarea:required:valid { /* when a field is considered va
 }
 
 .sidebar {
+	max-width:350px;
 	padding:20px;
+	right:0;
     background-color: #fff;
 	position:fixed;
 	height:100%;
-	border-left: 1px solid #E2E2E2;
+	border-left: 1px solid #BDB9B9;
+   -moz-box-shadow:     0 0 10px #BDB9B9;
+   -webkit-box-shadow:  0 0 10px #BDB9B9;
+   box-shadow:          0 0 10px #BDB9B9;
 }
 
 .page-wrap {
 }
 
 .content {
-	border-bottom: 1px solid #E2E2E2;
-	padding:30px 15px;
-	color:#444;
+	padding:0px 15px 30px;
+	color:#595559;
 	font-size:11px;
 	line-height:0px;
 }
 
 
 
+h1#main-head {
+text-shadow: 0px 1px 1px #000;
+font-family: 'Playball', cursive;
+text-decoration:underline;
+background:url('/RedX_head.png')  0px 12px no-repeat;
+font-size:50px;
+margin:-10px 0 15px;
+}
 
+.sidebar .lead {
+	margin-bottom:40px;
+	width:300px;
+}
+
+.sidebar h3 {
+	margin-bottom:5px;
+}
 /* calendar
 -------------------------------------------------- */
 
 
 #calendar {
 }
+
+
+#calendar .header {
+font-size:14px;
+	height:60px;
+	margin-top:-5px;
+}
+
+#calendar .header .pager a{
+	border-radius:3px;
+	padding:8px 20px 5px;
+   -moz-box-shadow:    inset 0 0 10px #BDB9B9;
+   -webkit-box-shadow: inset 0 0 10px #BDB9B9;
+   box-shadow:         inset 0 0 10px #BDB9B9;
+border: 1px solid rgba(0, 0, 0, 0.05);
+	font-variant:small-caps;
+	font-weight:bold;
+}
+
+
+#calendar .header .pager li.span6 a{
+	width:50%;
+}
+
+#calendar .header li h3 {
+	line-height:35px;
+}
+
+
 .year{
 	font-size:42px;
-	line-height:132px;
+	line-height:140px;
 	vertical-align:bottom;
 	text-shadow: 0px 1px 1px #000;
 	font-family: 'Playball', cursive;
@@ -80,20 +138,27 @@ text-shadow: 0px 1px 1px #000;
 }
 
 .time{
-	font-size:36px;
+	font-size:20px;
 	text-align:center;
 }
 
+.calendar TH{
+	text-align:center;
+}
 
 .calendar TR:hover TD{
-	background-color:#fff;
-	color:#333;
+	color:#595559;
 }
 
 .calendar TD{
 	position:relative;
 	height:75px;
 	font-size:24px;
+	  -webkit-transition: all 0.1s ease-in-out; 
+	     -moz-transition: all 0.1s ease-in-out; 
+	       -o-transition: all 0.1s ease-in-out; 
+	          transition: all 0.1s ease-in-out; 
+	
 }
 
 .calendar TD.weekend{
@@ -101,8 +166,10 @@ text-shadow: 0px 1px 1px #000;
 }
 
 .calendar TD.today{
-	color:#009999;
-	border:1px solid #009999;
+	color:#558071;
+  -webkit-box-shadow:inset  0px 0px 6px 0px rgba(85,128,113, 0.4);
+          box-shadow:inset  0px 0px 6px 0px rgba(85,128,113, 0.4);
+
 }
 
 
@@ -121,10 +188,8 @@ text-shadow: 0px 1px 1px #000;
 	
 
 	.time{
-		font-size:36px;
-		text-align:center;
 		font-family: Lucida Grande;
-	        background-color: #666666;
+	        background-color: #1A5575;
 	        -webkit-background-clip: text;
 		-moz-background-clip: text;
 		background-clip: text;
@@ -135,7 +200,7 @@ text-shadow: 0px 1px 1px #000;
 
 	.calendar TD{
 		font-family: Lucida Grande;
-	        background-color: #333;
+	        background-color: #595559;
 	        -webkit-background-clip: text;
 		-moz-background-clip: text;
 		background-clip: text;
@@ -151,15 +216,17 @@ text-shadow: 0px 1px 1px #000;
 	
 	.calendar TD.today {
 	    color: transparent;
-		background-color:#009999;
+		background-color:#558071;
 	}
 }
 
 
+
+
 .calendar TD.completed #checkMark{
     color: #666;
-	background:url('/Red_x.png') center center no-repeat;
-	background-size: 65px 65px;
+	background:url('/RedX.png') center center no-repeat;
+	background-size: 80px 80px;
 	position:absolute;
 	width:100%;
 	height:100%;
@@ -320,7 +387,7 @@ opacity:1;
 
 
 #tag-filter .selected {
-	background-color: #006363;
+	background-color: #558071;
 	color:#fff;
 }
 
