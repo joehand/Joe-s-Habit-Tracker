@@ -104,6 +104,11 @@ margin:10px 0 20px;
 .sidebar #login-buttons .login-link-and-dropdown-list{
 	right:0px;
 }
+
+.sidebar blockquote {
+	margin-top:40px;
+	border-color:#fff;
+}
 /* calendar
 -------------------------------------------------- */
 
