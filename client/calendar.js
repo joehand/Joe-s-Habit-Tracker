@@ -253,5 +253,44 @@ Calendar.prototype =  {
 	clockUpdate : function() {
 		var time = new Date().formatTime();
 		$('.time').html(time);
+	},
+	//takes the history array and determines the streak of days in a row, from most recent
+	streakCalc : function(history) {
+		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+		
+		var streak = 0,
+			yesterday = new Date().removeHours().getTime() - 24*60*60*1000,
+			recentTimestamp = _.any(history, function(num) {return num >= yesterday; });//find item in array that is newer than yesterday (yesterday or today)
+		
+		if (recentTimestamp) {
+		//should it just start the streak from today? i guess so. or yesterday. if today is in there that is fine, we will count that.
+		//sort to make the most recent first in array
+			var sortedHistory = _.sortBy(history, function(num){ return -num; });
+		
+		//find timestamp from today or yesterday. if the first timestamp is today or yesterday, streak is 0. 
+		//if it is there, start calcualting. move back in the array one at a time and see if its 0 days between. if not, set the streak
+		//if it is 0 days in between, set streak #, then compare the next two items in array. if zero, keep going.		
+		
+			var streakArray = _.reject(sortedHistory, function(num, index) {
+				if (index === 0 )
+					return false; //one day automatic streak!
+				else
+					return daysBetween(num, sortedHistory[0]) === index + 1; //returns values in array if index + 1 days since start of streak				
+			});
+			
+			streak = streakArray.length;
+		}
+		
+		return streak;
+		
+		
+		//firstTimestamp and secondTimestamp are passed as Timestamps not dates
+		function daysBetween(firstTimestamp, secondTimestamp) {
+			var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+			var diffDays = Math.round(Math.abs((firstTimestamp - secondTimestamp)/(oneDay)));
+			return diffDays;
+		}
+		
+		
 	}
 };

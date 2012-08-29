@@ -241,6 +241,11 @@ Template.habit_item.adding_date = function () {
   return Session.equals('editing_date', this._id);
 };
 
+
+Template.habit_item.streak = function () {
+  return Session.get('calendar').streakCalc(this.history);
+};
+
 Template.habit_item.adding_tag = function () {
   return Session.equals('editing_addtag', this._id);
 };
@@ -331,8 +336,8 @@ Template.habit_item.events[ okcancel_events('#edittag-input') ] =
 Template.habit_item.events[ okcancel_events('#date-input') ] =
 	make_okcancel_handler({
 		ok: function (value) {
-		var parts = value.match(/(\d+)/g);		
-		var timestamp = new Date(parts[0], parts[1]-1, parts[2]).removeHours().getTime();
+		var parts = value.match(/(\d+)/g);	//need to do this otherwise day is off 1
+		var timestamp = new Date(parts[0], parts[1]-1, parts[2]).removeHours().getTime(); //set as timestamp for beginning of day
 		Habits.update(this._id, {$addToSet: {history: timestamp}});
 		Session.set('editing_date', null);
 	},
