@@ -251,6 +251,7 @@ Template.habit_item.events = {
 		Habits.remove(this._id);
 	},
 	'click .addtag': function (evt) {
+		$('#tags').collapse('show');
 		Session.set('editing_addtag', this._id);
 		Meteor.flush(); // update DOM before focus
 		focus_field_by_id("edittag-input");
@@ -272,10 +273,11 @@ Template.habit_item.events = {
 					$set: {timestamp: today, done: !this.done}
 				}); 
 			}
-		/*	
+	},
+	'click .display .calendar': function (evt) {		
 		Session.set('editing_date', this._id);
 		Meteor.flush(); // update DOM before focus
-		focus_field_by_id("date-input");*/
+		focus_field_by_id("date-input");
 	},
 	'click .display .edit-icon': function (evt) {
 		Session.set('editing_itemname', this._id);

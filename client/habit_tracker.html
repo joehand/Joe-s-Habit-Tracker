@@ -20,21 +20,25 @@
 			  		</div> -->
 	    </div>
 		<div class="span4" id="sidebar">
-		  <section class="sidebar">	
+		  <section class="sidebar ">	
 			 <h1 id="main-head">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Streak</h1>
 			<!--Sidebar content-->
 			 <div class="row-fluid">
 		  		<p class="lead span11">Track your daily habits visually. Try not to break the chain.</p>
 				
+			</div>
+				 <div class="row-fluid">
 				{{#unless currentUser}}
-				<h3 class=" span5">Start Playing</h3>
+				<h3 class=" span8">Start Playing</h3>
 				{{/unless}}
-				<div class="sign-in span5 pull-right">
-				<i class="icon-user pull-left"></i>
+				<div class="sign-in span3 pull-right">
+				<i class="icon-user pull-right"></i>
 				{{> loginButtons}}
 				</div>
-		    	{{> habits}}
 			</div>
+					 <div class="row-fluid">
+		    	{{> habits}}
+					</div>
 		  </section>
 	    </div>
 	  </div>
@@ -59,7 +63,7 @@
 
 <template name="habits">
   {{#if any_list_selected}}
-  <div id="items-view" class="span10">
+  <div id="items-view" class="span12">
 	  <div class="control-group span10" id="new-habit-box">
 		<div class="controls ">
 	      <div class="input-prepend">
@@ -68,7 +72,7 @@
 		  </div>
 	    </div>
 	  </div>
-    <ul id="item-list" class="span10">
+    <ul id="item-list" class="span12">
       {{#each habits}}
         {{> habit_item}}
       {{/each}}
@@ -79,12 +83,12 @@
 
 <template name="habit_item">
     {{#if editing}}
-  <li class="habit {{done_class}} edit">
+  <li class="habit   {{done_class}} edit">
       <div class="edit">
-	  <div class="control-group" id="new-habit-box">
+	  <div class="control-group " id="new-habit-box">
 		<div class="controls ">
-		      <div class="input-prepend">
-		        <span class="add-on"><label for="habit-input"><i class="icon-leaf"></i></label></span>
+		      <div class="input-prepend ">
+		        <span class="add-on pull-left"><label for="habit-input"><i class="icon-leaf"></i></label></span>
 		        <input id="habit-input" type="text" value="{{text}}" />
 			  </div>
 			  </div>
@@ -92,28 +96,40 @@
 		
     {{else}}
 	
-  	<li class="habit {{done_class}}">
-      <div class="display">		
-		<i class="destroy icon-trash  pull-left"></i>
-		<i class="edit-icon icon-pencil  pull-left"></i>
-        <div class="check habit-text span8">{{text}}</div>
-    </div>
+  	<li class="habit  {{done_class}} ">
+      <div class="display">			
+			<i class="show check icon-ok  pull-left"></i>
+			<i class="calendar icon-calendar  pull-left"></i>
+        <div class="check habit-text span8">{{text}}</div>	
+				<i class="destroy icon-trash  pull-right"></i>
+			<i class="edit-icon icon-pencil  pull-right"></i>
+    </div>		
     {{/if}}	
 	
+      {{#if adding_date}}
+  <div class="control-group">
+    <div class="controls">	
+	  <div class="input-prepend editdate">
+        <span class="add-on pull-left"><label for="date"><i class="icon-calendar"></i></label></span>
+		<input class="input-large" type="date" id="date-input" value=""/>
+	  </div>
+	</div>
+  </div>
+  </div>	
+{{/if}}
 	
+  <div class=" item-tags">
 	<div class="tags">
-	<i class=" pull-right icon-tags"  data-toggle="collapse" data-target="#demo"></i>
     {{#if adding_tag}}
-      <div class="tag edittag">
+      <div class="tag edittag ">
         <input type="text" id="edittag-input" value="" />
       </div>
     {{else}}
-      <div class="tag addtag pull-right">
-		 +tag
+      <div class=" tag addtag">
+		 <i class=" icon-tags"></i>
       </div>
     {{/if}}
 	
-  <div id="demo" class="collapse item-tags">
     {{#each tag_objs}}
       <div class="tag removable_tag">
         <div class="name">{{tag}}</div>
@@ -140,17 +156,6 @@
       </div>
     {{/if}}-->
 	
-      {{#if adding_date}}
-  <div class="control-group">
-    <div class="controls">	
-	  <div class="input-prepend editdate">
-        <span class="add-on"><label for="date"><i class="icon-calendar"></i></label></span>
-		<input class="input-large" type="date" id="date-input" value=""/>
-	  </div>
-	</div>
-  </div>
-  </div>	
-{{/if}}
   </li>
 </template>
 
@@ -195,7 +200,7 @@
 
 
 			
-			<table id="calendar" class="table calendar">
+			<table id="calendar" class=" table calendar table-condensed" >
 				<thead>
 					<tr>
 					{{#each days}}
@@ -207,7 +212,7 @@
 					{{#each weeks}}
 					<tr>
 						{{#each dates}}
-							<td class="{{this.elClass}}" id="{{this.id}}" data-ts="{{this.dayts}}">{{this.date}}<div id="checkMark"></div>
+							<td class=" {{this.elClass}}" id="{{this.id}}" data-ts="{{this.dayts}}">{{this.date}}<div id="checkMark"></div>
 							</td>
 						{{/each}}
 					</tr>
