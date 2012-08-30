@@ -10,7 +10,7 @@ html {
 }
 
 body {
-  background-color: #F3F3F3;
+  background: #F3F3F3 url('/light_noise_diagonal.png');
   position: relative;	
 	font-family: 'Arvo', serif;
   color:#595559;
@@ -58,10 +58,12 @@ input:required:valid, textarea:required:valid { /* when a field is considered va
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	border: 1px solid rgba(0, 0, 0, 0.05);
-   -moz-box-shadow:  inset   0 0 10px #BDB9B9;
-   -webkit-box-shadow: inset 0 0 10px #BDB9B9;
-   box-shadow:         inset 0 0 10px #BDB9B9;
+   -moz-box-shadow:     0 0 10px #BDB9B9;
+   -webkit-box-shadow:  0 0 10px #BDB9B9;
+   box-shadow:          0 0 10px #BDB9B9;
   position:relative;
+  background: #F3F3F3 url('/black_linen_v2.png');
+color:#fff;
 }
 
 .container-fluid{padding-right:10px;}
@@ -77,13 +79,14 @@ input:required:valid, textarea:required:valid { /* when a field is considered va
 
 #streakLogo {
 	border-bottom:2px solid #595559;
-	background:#fff url('/RedX_head.png')  0px 0px repeat-x;
+	background: url('/RedX_head.png')  0px 0px repeat-x;
 	position:absolute;
 	top:40px;
 	height:20px;
 	width:75%;
 	left:30px;
 	z-index:1;
+	opacity:0.8;
 }
 
 
@@ -95,7 +98,8 @@ font-family: 'Playball', cursive;
 font-size:50px;
 margin:10px 0 20px;
 text-align:right;
-background-color:rgba(250,250,250,0.75);
+color:#fff;
+opacity:0.9;
 border-radius:20px;
 z-index:10;
 position:absolute;
@@ -116,7 +120,7 @@ position:absolute;
 
 .sidebar .sign-in i{
 	margin-top:3px;
-	margin-left:-10px;
+	margin-left:0px;
 	position:absolute;
 }
 
@@ -128,9 +132,8 @@ position:absolute;
 }
 
 
-
-.sidebar #login-buttons .login-link-and-dropdown-list{
-	right:0px;
+#login-buttons a.login-link-text {
+	color:#ff0000;
 }
 
 
@@ -168,6 +171,10 @@ bottom:-5px;
 }
 
 
+footer {
+	margin:25px 0 15px;
+	
+}
 
 footer ul.breadcrumb {
 	background:none;
@@ -175,13 +182,16 @@ footer ul.breadcrumb {
 	box-shadow:none;
 	font-variant:small-caps;
 	font-size:14px;
+	margin:5px auto;
+	width:200px;
 }
 
 
 /*quote at bottom*/
 .sidebar blockquote {
 	margin-top:30px;
-	border-color:#fff;
+	border-color:#595559;
+	color:#595559;
 }
 /* calendar
 -------------------------------------------------- */
@@ -352,7 +362,7 @@ color: #595559;
 .calendar TD.completed #checkMark{
     color: #666;
 	z-index:-1;
-	background:#F3F3F3 url('/RedX.png') center center no-repeat;
+	background:url('/RedX.png') center center no-repeat;
 	background-size: 80px 80px;
 	width:80px;
 	height:80px;
@@ -409,6 +419,11 @@ color: #595559;
     padding-top: 10px;
     line-height: 1;
 z-index:15;
+}
+
+
+#item-list .habit:hover .habit-text  {
+opacity:0.7;
 }
 
 #item-list .habit .edit  {

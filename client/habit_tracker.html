@@ -18,14 +18,7 @@
 			  		<div id="createList" class="span10 ">
 			    		<input type="text" id="new-list" class="input-mini" placeholder="New list" />
 			  		</div> -->
-			<footer class="span12"><ul class="breadcrumb">
-					  <li class="">
-					    <a href="#">About</a><span class="divider">/</span>
-					  </li>
-					  <li><a href="http://joehand.org">By hand</a><span class="divider">/</span></li>
-					  <li><a href="#">Cat</a></li>
-					</ul>
-			</footer>
+			
 	    </div>
 		<div class="span4" id="sidebar">
 		  <section class="sidebar ">		
@@ -45,7 +38,7 @@
 				
 				<h3 class=" span9">Start Playing: <br/><small>DEMO MODE</small></h3>
 				<div class="sign-in span3 pull-right">
-				<i class="icon-user pull-right"></i>
+				<i class="icon-white icon-user pull-right"></i>
 				{{> loginButtons}}
 				</div>
 				{{/if}}
@@ -116,12 +109,12 @@
     {{else}}
 	
       <div class="display">			
-			<i class="show check icon-ok  pull-left"></i>
-			<i class="calendar icon-calendar  pull-left"></i>
+			<i class="show check icon-ok  icon-white pull-left"></i>
+			<i class="calendar icon-calendar icon-white  pull-left"></i>
         <span class="check habit-text span7">{{text}}</span>	
-        <span class="streak span2 {{streak.elClass}}"><i class="icon-fire pull-left"></i>{{streak.text}}</span>
-	<i class="edit-icon icon-pencil  pull-right"></i>
-				<i class="destroy icon-trash  pull-right"></i>
+        <span class="streak span2 {{streak.elClass}}"><i class="icon-fire pull-left icon-white"></i>{{streak.text}}</span>
+	<i class="edit-icon icon-pencil icon-white pull-right"></i>
+				<i class="destroy icon-trash icon-white pull-right"></i>
     </div>		
     {{/if}}	
 	
@@ -145,7 +138,7 @@
       </div>
     {{else}}
       <div class=" tag addtag">
-		 <i class=" icon-tags"></i>
+		 <i class=" icon-tags icon-white"></i>
       </div>
     {{/if}}
 	
@@ -192,6 +185,14 @@
 		{{/if}}
       </div>
     {{/each}}
+	<footer class="span12"><ul class="breadcrumb">
+			  <li class="">
+			    <a href="#/about">About</a><span class="divider">/</span>
+			  </li>
+			  <li><a href="#/blog">Blog</a><span class="divider">/</span></li>
+			  <li><a href="#/contact">Contact</a></li>
+			</ul>
+	</footer>
   </div>
 </template>
 
