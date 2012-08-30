@@ -10,7 +10,7 @@ html {
 }
 
 body {
-  background-color: #F3F3F3;
+  background: #F3F3F3 url('/furley_bg.png');
   position: relative;	
 	font-family: 'Arvo', serif;
   color:#595559;
@@ -99,14 +99,18 @@ background-color:rgba(250,250,250,0.75);
 border-radius:20px;
 z-index:10;
 position:absolute;
+-webkit-font-smoothing: antialiased;
+
 }
 
 .sidebar .lead {
 	margin-bottom:20px;
+	-webkit-font-smoothing: antialiased;
 }
 
 .sidebar h3 {
 	margin-bottom:5px;
+	-webkit-font-smoothing: antialiased;
 }
 
 
@@ -168,13 +172,17 @@ bottom:-5px;
 }
 
 
-
+footer {
+ 	 margin:25px 0 15px;
+}
 footer ul.breadcrumb {
 	background:none;
 	border:none;
 	box-shadow:none;
 	font-variant:small-caps;
 	font-size:14px;
+	margin:5px auto;
+	width:200px;
 }
 
 
@@ -352,7 +360,7 @@ color: #595559;
 .calendar TD.completed #checkMark{
     color: #666;
 	z-index:-1;
-	background:#F3F3F3 url('/RedX.png') center center no-repeat;
+	background: url('/RedX.png') center center no-repeat;
 	background-size: 80px 80px;
 	width:80px;
 	height:80px;
