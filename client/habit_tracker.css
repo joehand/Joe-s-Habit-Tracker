@@ -58,9 +58,9 @@ input:required:valid, textarea:required:valid { /* when a field is considered va
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	border: 1px solid rgba(0, 0, 0, 0.05);
-   -moz-box-shadow:     0 0 10px #BDB9B9;
-   -webkit-box-shadow:  0 0 10px #BDB9B9;
-   box-shadow:          0 0 10px #BDB9B9;
+   -moz-box-shadow:  inset   0 0 10px #BDB9B9;
+   -webkit-box-shadow: inset 0 0 10px #BDB9B9;
+   box-shadow:         inset 0 0 10px #BDB9B9;
   position:relative;
 }
 
@@ -380,6 +380,7 @@ color: #595559;
 #item-list {
 	width:100%;
     margin-left: 0px;
+	height:100%;
 }
 
 #item-list .habit {
@@ -402,11 +403,12 @@ color: #595559;
 
 
 #item-list .habit .display, #item-list .habit .edit {
-    height: 100%;
+    height: 30px;
     width: 100%;
     float: left;
     padding-top: 10px;
     line-height: 1;
+z-index:15;
 }
 
 #item-list .habit .edit  {
@@ -521,7 +523,16 @@ margin-bottom:5px;
     width: 80px;
 }
 
-
+.well {
+	
+    background-color: #fff;-moz-border-radius-bottomright: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid rgba(0, 0, 0, 0.05);
+   -moz-box-shadow:  inset   0 0 10px #BDB9B9;
+   -webkit-box-shadow: inset 0 0 10px #BDB9B9;
+   box-shadow:         inset 0 0 10px #BDB9B9;
+}
 
 .tag {
 	cursor:pointer;

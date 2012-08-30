@@ -307,16 +307,32 @@ Calendar.prototype =  {
 			historyArray.push(startDate - oneDay * i);
 		}	
 		
-		 Habits.insert({
-	        text: habitName,
-	        list_id: Session.get('list_id'),
-	        done: false,
-	        created: (new Date().getTime()),
-	        timestamp: null,
-	        tags: tag ? [tag] : [],
-	        history: historyArray,
-			privateTo: Meteor.user()._id
-	      });	
+		if (Meteor.user() !== null)	{
+	      
+			 Habits.insert({
+		        text: habitName,
+		        list_id: Session.get('list_id'),
+		        done: false,
+		        created: (new Date().getTime()),
+		        timestamp: null,
+		        tags: tag ? [tag] : [],
+		        history: historyArray,
+				privateTo: Meteor.user()._id
+		      });
+
+		  }  else {
+		      
+			 Habits.insert({
+		        text: habitName,
+		        list_id: Session.get('list_id'),
+		        done: false,
+		        created: (new Date().getTime()),
+		        timestamp: null,
+		        tags: tag ? [tag] : [],
+		        history: historyArray
+		      });
+		}
+			
 			
 		return historyArray;	
 	}

@@ -101,8 +101,8 @@
 </template>
 
 <template name="habit_item">
+<li class="habit  {{done_class}} ">
     {{#if editing}}
-  <li class="habit   {{done_class}} edit">
       <div class="edit">
 	  <div class="control-group span12" id="new-habit-box">
 		<div class="controls ">
@@ -115,7 +115,6 @@
 		
     {{else}}
 	
-  	<li class="habit  {{done_class}} ">
       <div class="display">			
 			<i class="show check icon-ok  pull-left"></i>
 			<i class="calendar icon-calendar  pull-left"></i>
