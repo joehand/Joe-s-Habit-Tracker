@@ -18,24 +18,37 @@
 			  		<div id="createList" class="span10 ">
 			    		<input type="text" id="new-list" class="input-mini" placeholder="New list" />
 			  		</div> -->
-			<footer class="span12"></footer>
+			<footer class="span12"><ul class="breadcrumb">
+					  <li class="">
+					    <a href="#">About</a><span class="divider">/</span>
+					  </li>
+					  <li><a href="http://joehand.org">By hand</a><span class="divider">/</span></li>
+					  <li><a href="#">Cat</a></li>
+					</ul>
+			</footer>
 	    </div>
 		<div class="span4" id="sidebar">
-		  <section class="sidebar ">	
-			 <h1 id="main-head">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Streak</h1>
+		  <section class="sidebar ">		
+			<div id="streakLogo"></div>
+			 <h1 id="main-head">Streak</h1>
 			<!--Sidebar content-->
 			 <div class="row-fluid">
 		  		<p class="lead span11">Track your daily habits visually. Try not to break the chain.</p>
 				
 			</div>
 				 <div class="row-fluid">
-				{{#unless currentUser}}
-				<h3 class=" span8">Start Playing</h3>
-				{{/unless}}
+				{{#if currentUser}}
+					<div class="currentUser span12">
+					{{> loginButtons}}
+					</div>
+				{{else}}
+				
+				<h3 class=" span9">Start Playing: <br/><small>DEMO MODE</small></h3>
 				<div class="sign-in span3 pull-right">
 				<i class="icon-user pull-right"></i>
 				{{> loginButtons}}
 				</div>
+				{{/if}}
 			</div>
 					 <div class="row-fluid">
 		    	{{> habits}}
@@ -70,11 +83,11 @@
 <template name="habits">
   {{#if any_list_selected}}
   <div id="items-view" class="span12">
-	  <div class="control-group span10" id="new-habit-box">
+	  <div class="control-group span12" id="new-habit-box">
 		<div class="controls ">
 	      <div class="input-prepend">
-	        <span class="add-on"><label for="new-habit"><i class="icon-leaf"></i></label></span>
-		    <input class="" id="new-habit" type="text" placeholder="New Habit" required/>
+	        <span class="add-on span2"><label for="new-habit"><i class="icon-leaf"></i></label></span>
+		    <input class="span10" id="new-habit" type="text" placeholder="New Habit" required/>
 		  </div>
 	    </div>
 	  </div>
@@ -91,11 +104,11 @@
     {{#if editing}}
   <li class="habit   {{done_class}} edit">
       <div class="edit">
-	  <div class="control-group " id="new-habit-box">
+	  <div class="control-group span12" id="new-habit-box">
 		<div class="controls ">
 		      <div class="input-prepend ">
-		        <span class="add-on pull-left"><label for="habit-input"><i class="icon-leaf"></i></label></span>
-		        <input id="habit-input" type="text" value="{{text}}" />
+		        <span class="add-on span2"><label for="habit-input"><i class="icon-leaf"></i></label></span>
+		        <input id="habit-input" class="span10" type="text" value="{{text}}" />
 			  </div>
 			  </div>
 		    </div>
@@ -106,19 +119,19 @@
       <div class="display">			
 			<i class="show check icon-ok  pull-left"></i>
 			<i class="calendar icon-calendar  pull-left"></i>
-        <span class="check habit-text span8">{{text}}</span>	
-        <span class="streak span1">{{streak}}</span>	
+        <span class="check habit-text span7">{{text}}</span>	
+        <span class="streak span2 {{streak.elClass}}"><i class="icon-fire pull-left"></i>{{streak.text}}</span>
+	<i class="edit-icon icon-pencil  pull-right"></i>
 				<i class="destroy icon-trash  pull-right"></i>
-			<i class="edit-icon icon-pencil  pull-right"></i>
     </div>		
     {{/if}}	
 	
       {{#if adding_date}}
-  <div class="control-group">
+  <div class="control-group date-controls span12">
     <div class="controls">	
 	  <div class="input-prepend editdate">
-        <span class="add-on pull-left"><label for="date"><i class="icon-calendar"></i></label></span>
-		<input class="input-large" type="date" id="date-input" value=""/>
+        <span class="add-on  span2"><label for="date"><i class="icon-calendar"></i></label></span>
+		<input class="input span6" type="date" id="date-input" value=""/>
 	  </div>
 	</div>
   </div>

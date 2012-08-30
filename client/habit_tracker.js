@@ -159,7 +159,6 @@ Template.habits.events[ okcancel_events('#new-habit') ] =
 	        timestamp: null,
 	        tags: tag ? [tag] : [],
 	        history: [],
-			streak: 0,
 			privateTo: Meteor.user()._id
 	      });
 		
@@ -171,8 +170,7 @@ Template.habits.events[ okcancel_events('#new-habit') ] =
 	        created: (new Date().getTime()),
 	        timestamp: null,
 	        tags: tag ? [tag] : [],
-	        history: [],
-			streak: 0
+	        history: []
 	      });
 	}
 		
@@ -243,7 +241,13 @@ Template.habit_item.adding_date = function () {
 
 
 Template.habit_item.streak = function () {
-  return Session.get('calendar').streakCalc(this.history);
+  var streak = {};
+    streak.text = Session.get('calendar').streakCalc(this.history);
+  if (streak.text >= 7)
+	streak.elClass = 'hot';
+  else
+	streak.elClass = '';
+  return streak;
 };
 
 Template.habit_item.adding_tag = function () {

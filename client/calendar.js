@@ -243,7 +243,7 @@ Calendar.prototype =  {
 					
 			  } else {
 				  $el
-			      	.find('.icon-ok:last').remove()
+			      	.find('*[data-ts="' + habit_id + '"]').remove()
 					.removeClass('completed');
 		      }
 		});
@@ -254,11 +254,18 @@ Calendar.prototype =  {
 		var time = new Date().formatTime();
 		$('.time').html(time);
 	},
+	//firstTimestamp and secondTimestamp are passed as Timestamps not dates
+	daysBetween : function (firstTimestamp, secondTimestamp) {
+		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+		var diffDays = Math.round(Math.abs((firstTimestamp - secondTimestamp)/(oneDay)));
+		return diffDays;
+	},
+	
 	//takes the history array and determines the streak of days in a row, from most recent
 	streakCalc : function(history) {
 		var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
 		
-		var streak = 0,
+		var streak = '',
 			yesterday = new Date().removeHours().getTime() - 24*60*60*1000,
 			recentTimestamp = _.any(history, function(num) {return num >= yesterday; });//find item in array that is newer than yesterday (yesterday or today)
 		
@@ -275,8 +282,8 @@ Calendar.prototype =  {
 				if (index === 0 )
 					return false; //one day automatic streak!
 				else
-					return daysBetween(num, sortedHistory[0]) === index + 1; //returns values in array if index + 1 days since start of streak				
-			});
+					return this.daysBetween(num, sortedHistory[0]) === index + 1; //returns values in array if index + 1 days since start of streak				
+			}, Session.get('calendar'));
 			
 			streak = streakArray.length;
 		}
@@ -284,13 +291,33 @@ Calendar.prototype =  {
 		return streak;
 		
 		
-		//firstTimestamp and secondTimestamp are passed as Timestamps not dates
-		function daysBetween(firstTimestamp, secondTimestamp) {
-			var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
-			var diffDays = Math.round(Math.abs((firstTimestamp - secondTimestamp)/(oneDay)));
-			return diffDays;
-		}
 		
+	},
+	//streak creator for making a history array if a user want to input a streak
+	streakCreator : function(habitName, streakDays, startDate, tag) {
+		var oneDay = 24*60*60*1000, // hours*minutes*seconds*milliseconds
+			historyArray = [];
+			
+		if (!startDate)
+			startDate = new Date().getTime();
+		else
+			startDate = new Date(startDate).getTime();
+			
+		for (var i=1; i<streakDays; ++i ) {
+			historyArray.push(startDate - oneDay * i);
+		}	
 		
+		 Habits.insert({
+	        text: habitName,
+	        list_id: Session.get('list_id'),
+	        done: false,
+	        created: (new Date().getTime()),
+	        timestamp: null,
+	        tags: tag ? [tag] : [],
+	        history: historyArray,
+			privateTo: Meteor.user()._id
+	      });	
+			
+		return historyArray;	
 	}
 };
