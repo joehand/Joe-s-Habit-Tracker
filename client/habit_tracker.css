@@ -307,7 +307,7 @@ color: #595559;
 /*check marks*/
 .calendar TD.completed i {
 	display:inline-block;
-	float:right;
+	float:left;
 }
 
 .calendar TD #dateInner {
@@ -403,6 +403,7 @@ color: #595559;
 
 #item-list .habit .streak i{
 	display:none;
+	position:relative;
 }
 #item-list .habit .streak.hot i{
 	opacity:1;
@@ -416,7 +417,7 @@ color: #595559;
     float: left;
     padding-top: 10px;
     line-height: 1;
-z-index:15;
+	position:relative;
 }
 
 #item-list .habit .edit  {
@@ -427,6 +428,7 @@ margin:-7px 0 0px 0px;
 #item-list li {
 	list-style-type:none;
 }
+
 
 
 #item-list .done .habit-text {
