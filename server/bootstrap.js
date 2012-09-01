@@ -1,5 +1,48 @@
 // if the database is empty on server start, create some sample data.
 Meteor.startup(function () {
+	Meteor.methods({
+	  	updateHabits : function() {
+
+			console.log('start');
+
+			  var list_id = Session.get('list_id');
+			  if (!list_id)
+				var sel = {};
+			  else
+				var sel = {list_id: list_id};
+			  var tag_filter = Session.get('tag_filter');
+			  if (tag_filter)
+			    sel.tags = tag_filter;
+
+				console.log('start1');
+
+			var today = new Date().removeHours().getTime();
+
+			  //checking if list hasn't been updated since yesterday
+			  //there has got to be a better way to do this!
+			  if (Habits.findOne(sel)) {		
+				console.log(Habits.findOne({}, {sort: {timestamp:-1}}));
+				var prevTime = Habits.findOne(sel,{sort: {timestamp: 1}}).timestamp;
+				console.log('check1');
+					console.log(prevTime);
+				console.log(today);
+				//if a habit was done previously, i grab that time and add it to the history then reset it!
+				if (prevTime < today) {	
+						console.log('check2');
+					_.each(Habits.find(sel).fetch(), function(habit) {
+
+						Habits.update(sel, { $set : {done: false, timestamp:null}});
+
+					});
+				}
+			  }
+
+			console.log('done');
+			return '';
+		}
+	});
+	
+	
   if (Lists.find().count() === 0) {
     var data = [
       /*{name: "Meteor Principles",

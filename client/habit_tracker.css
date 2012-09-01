@@ -307,7 +307,7 @@ color: #595559;
 /*check marks*/
 .calendar TD.completed i {
 	display:inline-block;
-	float:right;
+	float:left;
 }
 
 .calendar TD #dateInner {

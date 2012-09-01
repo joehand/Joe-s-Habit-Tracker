@@ -195,25 +195,6 @@ Template.habits.habits = function () {
   var tag_filter = Session.get('tag_filter');
   if (tag_filter)
     sel.tags = tag_filter;
-  	
-  var today = new Date().removeHours().getTime();
-
-  //checking if list hasn't been updated since yesterday
-  //there has got to be a better way to do this!
-  if (Habits.findOne(sel)) {	
-	var prevTime = Habits.findOne(sel,{sort: {timestamp: -1}}).timestamp;
-
-	//if a habit was done previously, i grab that time and add it to the history then reset it!
-	if (prevTime != today && prevTime !== '') {	
-		_.each(Habits.find(sel).fetch(), function(habit) {
-		if (habit.done)
-			habit.history.push(prevTime);
-		
-		habit.done = false;
-		habit.timestamp = null;
-		});
-	}
-  }
 
   return Habits.find(sel, {sort: {done:1, text:1}});
 };

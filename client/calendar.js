@@ -1,5 +1,11 @@
 
-// New Calendar	
+/* calendar.js	*/
+
+
+
+	/*SET all the Session variables as null. */
+	/*Used to bind data to template*/
+	
 Session.set('calendar', null);
 Session.set('year', null);
 Session.set('month', null);
@@ -7,75 +13,94 @@ Session.set('weeks', null);
 Session.set('time', null);
 
 
-if (Meteor.is_client) {
- /*CALENDAR Templates*/
 
-	Meteor.startup(function () {
-		var cal = new Calendar();
-		Session.set('calendar', cal);
-		Session.set('year', cal.year());
-		Session.set('month', cal.month());
-		Session.set('time', cal.now.formatTime());
-		Meteor.setInterval(cal.clockUpdate, 30000);
-	});
+	/*Stuff to run on startup*/
+	/*Creates a new calendar and sets session vars, starts clock*/
 
-	Template.calendar.ts = function() {
-		return new Date().getTime() || Session.get('calendar').calDate.getTime() ;
-	};
+Meteor.startup(function () {
+	//ask server to update habits to today
+	Meteor.call('updateHabits');
 	
-	Template.calendar.year = function() {
-		return Session.get('year') || new Calendar().year();
-	};
-	
-	Template.calendar.month = function() {	  
-		var cal = Session.get('calendar') || new Calendar(),
-			next = cal.nextMonthName(cal).nextMonth,
-			prev = cal.previousMonth().prevMonth;
-			
-		var month = {
-						current: cal.month(),
-						prev: prev,
-						next: next
-		}
-		return month;
-	};
-	
-	Template.calendar.weeks = function() {
-	    return Session.get('weeks') || new Calendar().weeks();
-	};
-	
-	Template.calendar.days = function() {
-		  return new Calendar().days;
-	 };
-	
-	Template.calendar.time = function() {
-	   return Session.get('time') || new Date().formatTime();
-	};
-	
-	Template.calendar.events = {
-		'click .next': function (evt) {
-	      var cal = null;
-	    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
-		cal = cal.nextMonthName(cal);
-			cal.updateCalendar();
-
-	  },
-  	'click .previous': function (evt) {
-	    var cal = null;
-	    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
-		cal = cal.previousMonth(true);	
-
-	  }	,
-	 'click .time': function (evt) {
-	    var cal = null;
-	    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
-		cal = cal.currentMonth(true);
-	  }
-
-  };
-}
+	var cal = new Calendar();
+	Session.set('calendar', cal);
+	Session.set('year', cal.year());
+	Session.set('month', cal.month());
+	Session.set('time', cal.now.formatTime());
+	Meteor.setInterval(cal.clockUpdate, 30000);
+});
 
 
+
+	/*CALENDAR Templates*/
+	/*Bind Session data to html template*/
+
+	/*Calendar Div ID = timestamp (changes w/ month & year)*/
+Template.calendar.ts = function() {
+	return new Date().getTime() || Session.get('calendar').calDate.getTime() ;
+};
+
+
+	/*Calendar year display*/
+Template.calendar.year = function() {
+	return Session.get('year') || new Calendar().year();
+};
+
+	/*Calendar month display and next/previous buttons (Object passed to template)*/
+Template.calendar.month = function() {	  
+	var cal = Session.get('calendar') || new Calendar(),
+		next = cal.nextMonthName(cal).nextMonth,
+		prev = cal.previousMonth().prevMonth;
+		
+	var month = {
+					current: cal.month(),
+					prev: prev,
+					next: next
+	}
+	return month;
+};
+
+	/*Calendar weeks, determines number of rows*/
+Template.calendar.weeks = function() {
+    return Session.get('weeks') || new Calendar().weeks();
+};
+
+	/*Calendar days*/
+Template.calendar.days = function() {
+	  return new Calendar().days;
+ };
+
+	/*Calendar live clock*/
+Template.calendar.time = function() {
+   return Session.get('time') || new Date().formatTime();
+};
+
+	/********EVENTS*******/
+	/* NEXT & PREV month buttons*/
+	/* Click time => Current month*/
+Template.calendar.events = {
+	'click .next': function (evt) {
+      var cal = null;
+    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
+	cal = cal.nextMonthName(cal);
+		cal.updateCalendar();
+
+  },
+ 	'click .previous': function (evt) {
+    var cal = null;
+    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
+	cal = cal.previousMonth(true);	
+
+  }	,
+ 'click .time': function (evt) {
+    var cal = null;
+    Session.get('calendar') ? cal = Session.get('calendar') : cal = new Calendar();
+	cal = cal.currentMonth(true);
+  }
+
+ };
+
+	/********Calendar Object*******/
+	/* Starts with a date or by default Current Month*/
 
 var Calendar = function(calDate) {
 	this.now = new Date();
@@ -97,12 +122,17 @@ var Calendar = function(calDate) {
 	return this;
 };
 
+
+	/********Calendar Prototype*******/
+	/* Functions to get all the necessary display output */
+
 Calendar.prototype =  {
 	year: function() {return this.calDate.getFullYear();},
 	month: function() {return this.calDate.monthName();},
 	time: function() { return this.now.formatTime();},
 	days: [ "Sunday" ,"Monday" ,"Tuesday" ,"Wednesday" ,"Thursday" ,"Friday","Saturday"],
 	numWeeks: function() {return this.calDate.countWeeksOfMonth();},
+	/*Creates an array of weeks ready to pass to template*/
 	weeks: function(numWeeks) {
 		var weekArray = [], 
 			cal = this, date = 0;
@@ -123,6 +153,7 @@ Calendar.prototype =  {
 		return weekArray;
 		
 	},
+	/*Creates an array of date objects for html*/
 	dates: function(date, week, i) {
 		var dates = week.dates,
 			cal = this,
@@ -153,6 +184,7 @@ Calendar.prototype =  {
 		
 		return dates;
 	},
+	/*Find/Go to previous month. Update = true => Calendar update to new month*/
 	previousMonth: function(update) {
 		var oldCal = this, newMonth, newYear, cal, oldMonth = oldCal.calDate.getMonth();
 		
@@ -172,25 +204,7 @@ Calendar.prototype =  {
 				cal.updateCalendar();
 		return cal;
 	},
-	nextMonth: function(update) {		
-		var oldCal = this, newMonth, newYear, cal, oldMonth = oldCal.calDate.getMonth();
-		
-		if (oldMonth ===11) {
-			newMonth = 0;
-			newYear = oldCal.year() + 1;
-		} else {
-			newMonth = oldMonth + 1;
-			newYear = oldCal.year();
-		}
-		
-		var newDate = new Date(newYear, newMonth, 1)
-		cal = new Calendar (newDate);
-		
-		cal.nextMonth = newDate.monthName();
-		if (update)
-			cal.updateCalendar();
-		return cal;
-	},
+	/*Find/Go to next month. Update = true => Calendar update to new month*/
 	nextMonthName: function(oldCal) {
 		var newMonth, newYear, cal, oldMonth = oldCal.calDate.getMonth();
 		
@@ -214,6 +228,7 @@ Calendar.prototype =  {
 			cal.updateCalendar();
 		return cal;
 	},
+	/*Refreshes session data based on new cal data, will update templates*/
 	updateCalendar: function() {
 		Session.set('calendar', this); 
 	  	Session.set('year', this.year());
@@ -223,9 +238,8 @@ Calendar.prototype =  {
 		
 	},
 	markDates: function(habit_id, dates, removeAll) {
-		//hmmm this cannot update when the calendar updates, only when dates are changed. needs to go both ways.
 		//takes a dates array and adds checkboxes and a class for the whole date.
-		//dates = [timestamp1, timestamp2, ..], add = true (add dates) or false (remove dates)
+		//dates = [timestamp1, timestamp2, ..], removeAll true => delete habit
 		var html = '<i data-id="' + habit_id + '" class="icon-ok"></i>';
 		
 		var $checkMarks = $('#calendar').find('*[data-id="' + habit_id + '"]');
